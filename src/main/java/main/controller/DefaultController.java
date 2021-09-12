@@ -1,4 +1,4 @@
-package main;
+package main.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,7 +8,8 @@ import java.util.Date;
 @Controller
 public class DefaultController {
     @RequestMapping("/")
-    private String index(){
+        private String index(){
         return "index";
     }
+
 }
