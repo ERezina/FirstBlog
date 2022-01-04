@@ -1,0 +1,37 @@
+databaseChangeLog:
+- changeSet:
+    id: create-table-users
+    author: kat (generated)
+    changes:
+        - sqlFile:
+              dbms: mysql
+              encoding: utf8
+              endDelimiter: \n/\s*\n|\n/\s*$
+              path: 01-create-table-users.sql
+              relativeToChangelogFile: true
+              splitStatements: true
+              stripComments: true
+- changeSet:
+      id: create-table-hibernate_seq
+      author: kat (generated)
+      changes:
+          - sqlFile:
+                dbms: mysql
+                encoding: utf8
+                endDelimiter: \n/\s*\n|\n/\s*$
+                path: 03-create-table-hibernate_seq.sql
+                relativeToChangelogFile: true
+                splitStatements: true
+                stripComments: true
+- changeSet:
+      id: create-table-book
+      author: kat (generated)
+      changes:
+          - sqlFile:
+                dbms: mysql
+                encoding: utf8
+                endDelimiter: \n/\s*\n|\n/\s*$
+                path: 02-create-table-book.sql
+                relativeToChangelogFile: true
+                splitStatements: true
+                stripComments: true
