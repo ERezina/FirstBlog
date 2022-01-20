@@ -1,0 +1,6 @@
+ALTER TABLE Posts
+ADD user_id int
+/
+ALTER TABLE Posts
+ADD FOREIGN KEY (user_id) REFERENCES USERS(ID)
+/

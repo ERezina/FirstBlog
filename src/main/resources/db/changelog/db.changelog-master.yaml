@@ -35,3 +35,99 @@ databaseChangeLog:
                 relativeToChangelogFile: true
                 splitStatements: true
                 stripComments: true
+- changeSet:
+        id: add-0-hibernate-seq
+        author: kat (generated)
+        changes:
+              - sqlFile:
+                  dbms: mysql
+                  encoding:  utf8
+                  endDelimiter: \n/\s*\n|\n/\s*$
+                  path: 04-add-0-hibernate-seq.sql
+                  relativeToChangelogFile: true
+                  splitStatements: true
+                  stripComments: true
+- changeSet:
+    id: add-table-tag-post
+    author: kat (generated)
+    changes:
+      - sqlFile:
+          dbms: mysql
+          encoding:  utf8
+          endDelimiter: \n/\s*\n|\n/\s*$
+          path: 10-create-table-posts_tags.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
+- changeSet:
+    id: alter-table-post-keys-userid
+    author: kat (generated)
+    changes:
+      - sqlFile:
+          dbms: mysql
+          encoding:  utf8
+          endDelimiter: \n/\s*\n|\n/\s*$
+          path: 15-add-table-posts_key.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
+- changeSet:
+    id: create-table-postcomment
+    author: kat (generated)
+    changes:
+      - sqlFile:
+          dbms: mysql
+          encoding:  utf8
+          endDelimiter: \n/\s*\n|\n/\s*$
+          path: 20-create-table-postcomment.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
+- changeSet:
+    id: add-postcomment-parent
+    author: kat (generated)
+    changes:
+      - sqlFile:
+          dbms: mysql
+          encoding:  utf8
+          endDelimiter: \n/\s*\n|\n/\s*$
+          path: 25-add-postcomment-parent.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
+- changeSet:
+    id: add-postcomment-user
+    author: kat (generated)
+    changes:
+      - sqlFile:
+          dbms: mysql
+          encoding:  utf8
+          endDelimiter: \n/\s*\n|\n/\s*$
+          path: 30-add-postcomment-user.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
+- changeSet:
+    id: create-postvote
+    author: kat (generated)
+    changes:
+      - sqlFile:
+          dbms: mysql
+          encoding:  utf8
+          endDelimiter: \n/\s*\n|\n/\s*$
+          path: 35-create-table-postvoter.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
+- changeSet:
+    id: create-tag2post
+    author: kat (generated)
+    changes:
+      - sqlFile:
+          dbms: mysql
+          encoding:  utf8
+          endDelimiter: \n/\s*\n|\n/\s*$
+          path: 40-add-columns.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true

@@ -1,11 +1,11 @@
-package main;
+package com.personal.diplom.controller;
 
-import main.model.BookRepository;
+import com.personal.diplom.model.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import main.model.Book;
+import com.personal.diplom.model.Book;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +18,7 @@ public class BookController {
 
     @RequestMapping(value = "/books/", method = RequestMethod.GET)
     public List<Book> list(){
+        System.out.println("in books");
         Iterable<Book> bookIterable = bookRepository.findAll();
         ArrayList<Book> books = new ArrayList<>();
         for(Book book:bookIterable){

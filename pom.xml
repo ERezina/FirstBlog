@@ -73,7 +73,7 @@
             <artifactId>liquibase-maven-plugin</artifactId>
             <version>4.6.2</version>
             <configuration>
-                <propertyFile>${project.basedir}\liquibase-maven-plugin.properties</propertyFile>
+                <propertyFile>${project.basedir}\main\resources\liquibase-maven-plugin.properties</propertyFile>
                 <systemProperties>
                     <user.name>your_liquibase_username</user.name>
                 </systemProperties>
