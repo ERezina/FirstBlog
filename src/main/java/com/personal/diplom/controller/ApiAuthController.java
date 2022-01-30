@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class ApiAuthController {
 
     @RequestMapping(value = "/api/auth" , method = RequestMethod.GET)
-    public int add(){
-        return 1;
+    public boolean add(){
+        return false;
     }
 
     @RequestMapping(value = "/api/auth/check" , method = RequestMethod.GET)

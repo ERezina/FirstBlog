@@ -131,3 +131,75 @@ databaseChangeLog:
           relativeToChangelogFile: true
           splitStatements: true
           stripComments: true
+- changeSet:
+    id: create-global_settings-table
+    author: kat (generated)
+    changes:
+      - sqlFile:
+          dbms: mysql
+          encoding:  utf8
+          endDelimiter: \n/\s*\n|\n/\s*$
+          path: 50-add-table_global_settings.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
+- changeSet:
+    id: add-test-data-users
+    author: kat (generated)
+    changes:
+      - sqlFile:
+          dbms: mysql
+          encoding:  utf8
+          endDelimiter: \n/\s*\n|\n/\s*$
+          path: 60-add-test-data-users.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
+- changeSet:
+    id: add-test-data-posts
+    author: kat (generated)
+    changes:
+      - sqlFile:
+          dbms: mysql
+          encoding:  utf8
+          endDelimiter: \n/\s*\n|\n/\s*$
+          path: 70-add-test-data-post.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
+- changeSet:
+    id: delete-votes
+    author: kat (generated)
+    changes:
+      - sqlFile:
+          dbms: mysql
+          encoding:  utf8
+          endDelimiter: \n/\s*\n|\n/\s*$
+          path: 75-delete-post-votes-votes.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
+- changeSet:
+    id: add-test-data-votes
+    author: kat (generated)
+    changes:
+      - sqlFile:
+          dbms: mysql
+          encoding:  utf8
+          endDelimiter: \n/\s*\n|\n/\s*$
+          path: 80-add-test-data-votes.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
+- changeSet:
+    id: add-test-data-comment
+    author: kat (generated)
+    changes:
+      - sqlFile:
+          dbms: mysql
+          encoding:  utf8
+          endDelimiter: \n/\s*\n|\n/\s*$
+          path: 90-add-test-data-comment.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true

@@ -130,4 +130,46 @@ public class Post {
     public void setViewCount(int viewCount) {
         this.viewCount = viewCount;
     }
+
+    public User getModerator() {
+        return moderator;
+    }
+
+    public void setModerator(User moderator) {
+        this.moderator = moderator;
+    }
+
+    public List<PostComment> getCommentCollection() {
+        return commentCollection;
+    }
+
+    public void setCommentCollection(List<PostComment> commentCollection) {
+        this.commentCollection = commentCollection;
+    }
+    public  int getCountComment(){
+        return commentCollection.size();
+    }
+    public List<PostVotes> getPostVotesCollection() {
+        return postVotesCollection;
+    }
+
+    public long getCountLike() {
+        return postVotesCollection.stream().filter(vote->vote.getValue() == 1).count();
+    }
+
+    public long getCountDislike() {
+        return postVotesCollection.stream().filter(vote->vote.getValue() == -1).count();
+    }
+
+    public void setPostVotesCollection(List<PostVotes> postVotesCollection) {
+        this.postVotesCollection = postVotesCollection;
+    }
+
+    public List<Tag> getPostTags() {
+        return postTags;
+    }
+
+    public void setPostTags(List<Tag> postTags) {
+        this.postTags = postTags;
+    }
 }

@@ -1,5 +1,11 @@
 package com.personal.diplom.controller;
 
+import com.personal.diplom.Servise.PostServise;
+import com.personal.diplom.Servise.SettingsServise;
+import com.personal.diplom.api.response.InitResponse;
+import com.personal.diplom.api.response.SettingsResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -7,14 +13,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ApiGeneralController {
 
+    private final SettingsServise settingsServise;
+    private final InitResponse initResponse;
+
+
+    public ApiGeneralController(SettingsServise settingsServise, InitResponse initResponse){
+        this.settingsServise = settingsServise;
+        this.initResponse = initResponse;
+    }
+
     @RequestMapping(value = "/api/init", method = RequestMethod.GET)
-    public int init(){
-        return 23;
+    public InitResponse init(){
+        return initResponse;
     }
 
     @RequestMapping(value = "/api/settings", method = RequestMethod.GET)
-    public int settings(){
-        return 230;
+    public ResponseEntity<SettingsResponse> getSettings(){
+        return new ResponseEntity<>(settingsServise.getGlobalService(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/api/tag", method = RequestMethod.GET)

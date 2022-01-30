@@ -1,14 +1,25 @@
 package com.personal.diplom.controller;
 
+import com.personal.diplom.Servise.PostServise;
+import com.personal.diplom.api.response.PostsCountResponse;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class ApiPostController {
-    @RequestMapping(value = "/api/post", method = RequestMethod.POST)
-    public int setPost(){
-        return 4;
+
+    private final PostServise postServise;
+
+    public ApiPostController(PostServise postServise) {
+        this.postServise = postServise;
+    }
+
+    @RequestMapping(value = "/api/post", method = RequestMethod.GET)
+    public PostsCountResponse setPost(@RequestParam("limit") String limit, @RequestParam("mode") String mode){
+    //    PostsCountResponse postsCountResponse = new PostsCountResponse();
+        return postServise.getPostsCount();
     }
 
     @RequestMapping(value = "/api/post/{id}", method = RequestMethod.PUT)
