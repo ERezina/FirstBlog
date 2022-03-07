@@ -17,9 +17,9 @@ public class ApiPostController {
     }
 
     @RequestMapping(value = "/api/post", method = RequestMethod.GET)
-    public PostsCountResponse setPost(@RequestParam("limit") String limit, @RequestParam("mode") String mode){
+    public PostsCountResponse setPost(@RequestParam("offset") int offset,@RequestParam("limit") int limit, @RequestParam("mode") String mode){
     //    PostsCountResponse postsCountResponse = new PostsCountResponse();
-        return postServise.getPostsCount();
+        return postServise.getPostsCount(offset,limit, mode);
     }
 
     @RequestMapping(value = "/api/post/{id}", method = RequestMethod.PUT)

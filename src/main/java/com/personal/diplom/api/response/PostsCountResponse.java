@@ -22,6 +22,7 @@ public class PostsCountResponse {
     public void addPost(ArrayList<PostResponse> postList){
         posts.addAll(postList);
     }
+
     public void setPosts(ArrayList<PostResponse> posts) {
         this.posts = posts;
     }

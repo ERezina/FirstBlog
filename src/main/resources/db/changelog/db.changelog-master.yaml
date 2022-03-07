@@ -168,18 +168,6 @@ databaseChangeLog:
           splitStatements: true
           stripComments: true
 - changeSet:
-    id: delete-votes
-    author: kat (generated)
-    changes:
-      - sqlFile:
-          dbms: mysql
-          encoding:  utf8
-          endDelimiter: \n/\s*\n|\n/\s*$
-          path: 75-delete-post-votes-votes.sql
-          relativeToChangelogFile: true
-          splitStatements: true
-          stripComments: true
-- changeSet:
     id: add-test-data-votes
     author: kat (generated)
     changes:
@@ -200,6 +188,30 @@ databaseChangeLog:
           encoding:  utf8
           endDelimiter: \n/\s*\n|\n/\s*$
           path: 90-add-test-data-comment.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
+- changeSet:
+    id: add-test-data-post2
+    author: kat (generated)
+    changes:
+      - sqlFile:
+          dbms: mysql
+          encoding:  utf8
+          endDelimiter: \n/\s*\n|\n/\s*$
+          path: 95-add-test-data-comment.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
+- changeSet:
+    id: 100-add-test-data-post2
+    author: kat (generated)
+    changes:
+      - sqlFile:
+          dbms: mysql
+          encoding:  utf8
+          endDelimiter: \n/\s*\n|\n/\s*$
+          path: 100-add-test-data-votes.sql
           relativeToChangelogFile: true
           splitStatements: true
           stripComments: true
