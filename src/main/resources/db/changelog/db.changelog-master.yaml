@@ -215,3 +215,39 @@ databaseChangeLog:
           relativeToChangelogFile: true
           splitStatements: true
           stripComments: true
+- changeSet:
+    id: 105-add-test-data-tag
+    author: kat (generated)
+    changes:
+      - sqlFile:
+          dbms: mysql
+          encoding:  utf8
+          endDelimiter: \n/\s*\n|\n/\s*$
+          path: 105-add-test-data-tag.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
+- changeSet:
+    id: 110-add-test-data-tag2post
+    author: kat (generated)
+    changes:
+      - sqlFile:
+          dbms: mysql
+          encoding:  utf8
+          endDelimiter: \n/\s*\n|\n/\s*$
+          path: 110-add-test-data-tag2post.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
+- changeSet:
+    id: 115-delete-str-from-tag
+    author: kat (generated)
+    changes:
+      - sqlFile:
+          dbms: mysql
+          encoding:  utf8
+          endDelimiter: \n/\s*\n|\n/\s*$
+          path: 115-delete-str-from-tag.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true

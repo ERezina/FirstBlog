@@ -1,13 +1,15 @@
 package com.personal.diplom.controller;
 
-import com.personal.diplom.Servise.PostServise;
 import com.personal.diplom.Servise.SettingsServise;
+import com.personal.diplom.Servise.TagServise;
 import com.personal.diplom.api.response.InitResponse;
 import com.personal.diplom.api.response.SettingsResponse;
+import com.personal.diplom.api.response.TagsResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -15,11 +17,12 @@ public class ApiGeneralController {
 
     private final SettingsServise settingsServise;
     private final InitResponse initResponse;
+    private final TagServise tagServise;
 
-
-    public ApiGeneralController(SettingsServise settingsServise, InitResponse initResponse){
+    public ApiGeneralController(SettingsServise settingsServise, InitResponse initResponse, TagServise tagServise){
         this.settingsServise = settingsServise;
         this.initResponse = initResponse;
+        this.tagServise = tagServise;
     }
 
     @RequestMapping(value = "/api/init", method = RequestMethod.GET)
@@ -33,8 +36,9 @@ public class ApiGeneralController {
     }
 
     @RequestMapping(value = "/api/tag", method = RequestMethod.GET)
-    public int getListTag(){
-        return 231;
+    public TagsResponse getListTag(@RequestParam(value = "query",required = false) String query  ){
+        // public TagsResponse getListTag(){
+        return tagServise.getTagsWeight(query);
     }
 
     @RequestMapping(value = "/api/calendar", method = RequestMethod.GET)
