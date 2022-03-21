@@ -1,4 +1,4 @@
-package com.personal.diplom.model;
+package main.model;
 
 import javax.persistence.*;
 import java.util.Date;

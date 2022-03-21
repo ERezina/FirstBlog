@@ -1,7 +1,6 @@
-package com.personal.diplom.model;
+package main.model;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name="tags")
@@ -13,9 +12,6 @@ public class Tag {
 
     @Column(nullable = false)
     private String name;
-
-    @ManyToMany(mappedBy = "postTags")
-    private List<Post> postList;
 
     public int getId() {
         return id;

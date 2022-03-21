@@ -1,4 +1,4 @@
-package com.personal.diplom.model;
+package main.model;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -10,23 +10,16 @@ public class PostVotes {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @JoinColumn(name = "user_id",nullable = false)
+    @Column(name = "user_id",nullable = false)
     @ManyToOne(cascade = CascadeType.ALL)
     private User user;
 
+    @Column(name = "post_id",nullable = false)
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Post post;
+
     @Column(nullable = false)
     private Date time;
-
-
-    private int value_votes;
-
-    public int getValue() {
-        return value_votes;
-    }
-
-    public void setValue(int value) {
-        this.value_votes = value;
-    }
 
     public int getId() {
         return id;
@@ -44,13 +37,13 @@ public class PostVotes {
         this.user = user;
     }
 
-  //  public Post getPost() {
- //       return post;
-//    }
+    public Post getPost() {
+        return post;
+    }
 
- //   public void setPost(Post post) {
- //       this.post = post;
-//    }
+    public void setPost(Post post) {
+        this.post = post;
+    }
 
     public Date getTime() {
         return time;

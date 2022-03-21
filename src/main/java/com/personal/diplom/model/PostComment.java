@@ -1,4 +1,4 @@
-package com.personal.diplom.model;
+package main.model;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -10,15 +10,15 @@ public class PostComment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @JoinColumn(name="parent")
+    @Column(name="parent_id")
     @ManyToOne(cascade = CascadeType.ALL)
     private PostComment parent;
 
-  //  @JoinColumn(name="post_id",nullable = false)
- //   @ManyToOne(cascade = CascadeType.ALL)
- //   private Post post;
+    @Column(name="post_id",nullable = false)
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Post post;
 
-    @JoinColumn(name="user_id",nullable = false)
+    @Column(name="user_id",nullable = false)
     @ManyToOne(cascade = CascadeType.ALL)
     private User user;
 
@@ -44,13 +44,13 @@ public class PostComment {
         this.parent = parent;
     }
 
-  //  public Post getPostId() {
- //       return post;
-  //  }
+    public Post getPostId() {
+        return post;
+    }
 
- //   public void setPostId(Post post) {
- //       this.post = post;
-  //  }
+    public void setPostId(Post post) {
+        this.post = post;
+    }
 
     public User getUser() {
         return user;

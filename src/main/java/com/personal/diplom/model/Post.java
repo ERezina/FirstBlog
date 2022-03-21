@@ -1,11 +1,10 @@
-package com.personal.diplom.model;
+package main.model;
 
-//import main.ModerationStatusType;
+import main.ModerationStatusType;
 
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Table(name ="posts")
@@ -21,9 +20,8 @@ public class Post {
     @Column(name ="moderation_status",nullable = false,columnDefinition = "enum('NEW','ACCEPTED','DECLINED')")
     private ModerationStatusType moderationStatus;
 
-   // @Column(name="moderator_id")
+    @Column(name="moderator_id")
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "moderator_id")
     private User moderator;
 
     @ManyToOne(cascade = CascadeType.ALL)
@@ -41,23 +39,14 @@ public class Post {
     @Column(name = "view_count",nullable = false)
     private int viewCount;
 
-    @OneToMany
-    @JoinColumn(name="post_id")
-    private List<PostComment> commentCollection;
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
+    private Collection<PostComment> commentCollection;
 
-    @OneToMany
-    @JoinColumn(name="post_id")
-    private List<PostVotes> postVotesCollection;
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
+    private Collection<PostVotes> postVotesCollection;
 
-    @ManyToMany
-    @JoinTable(
-            name = "tag2post",
-            joinColumns = @JoinColumn(name = "post_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id"))
-    private List<Tag> postTags;
-
-//    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
-  //  private Collection<TagPost> tagPostCollection;
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
+    private Collection<TagPost> tagPostCollection;
 
     public int getId() {
         return id;
@@ -129,47 +118,5 @@ public class Post {
 
     public void setViewCount(int viewCount) {
         this.viewCount = viewCount;
-    }
-
-    public User getModerator() {
-        return moderator;
-    }
-
-    public void setModerator(User moderator) {
-        this.moderator = moderator;
-    }
-
-    public List<PostComment> getCommentCollection() {
-        return commentCollection;
-    }
-
-    public void setCommentCollection(List<PostComment> commentCollection) {
-        this.commentCollection = commentCollection;
-    }
-    public  int getCountComment(){
-        return commentCollection.size();
-    }
-    public List<PostVotes> getPostVotesCollection() {
-        return postVotesCollection;
-    }
-
-    public long getCountLike() {
-        return postVotesCollection.stream().filter(vote->vote.getValue() == 1).count();
-    }
-
-    public long getCountDislike() {
-        return postVotesCollection.stream().filter(vote->vote.getValue() == -1).count();
-    }
-
-    public void setPostVotesCollection(List<PostVotes> postVotesCollection) {
-        this.postVotesCollection = postVotesCollection;
-    }
-
-    public List<Tag> getPostTags() {
-        return postTags;
-    }
-
-    public void setPostTags(List<Tag> postTags) {
-        this.postTags = postTags;
     }
 }

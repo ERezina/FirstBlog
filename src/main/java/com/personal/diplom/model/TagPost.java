@@ -1,9 +1,9 @@
-package com.personal.diplom.model;
+package main.model;
 
 import javax.persistence.*;
 
-//@Entity
-//@Table(name = "tag2post")
+@Entity
+@Table(name = "tag2post")
 public class TagPost {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
