@@ -1,10 +1,10 @@
-package main.model;
+package com.personal.diplom.model;
 
 import javax.persistence.*;
 import java.util.Date;
 
-@Entity
-@Table(name="captcha_codes")
+//@Entity
+//@Table(name="captcha_codes")
 public class CaptchaCode {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,3 +19,4 @@ public class CaptchaCode {
     @Column(name="secret_code",nullable = false)
     private String secretCode;
 }
+
