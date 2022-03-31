@@ -7,6 +7,7 @@ import com.personal.diplom.repository.CalendarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
 import java.util.Collection;
 
 @Service
@@ -15,12 +16,16 @@ public class CalendarServise {
     private CalendarRepository calendarRepository;
 
     public CalendarYearResponse getCalendarResponse(Integer year){
+        if (year == null){
+            Calendar cal = Calendar.getInstance();
+            year = cal.get(Calendar.YEAR);
+        }
         CalendarYearResponse calendarYearResponse = new CalendarYearResponse();
         Collection<CountPostByDate>  countPostByDates = calendarRepository.GetCountPost(year);
         calendarYearResponse.addYear(year);
         for (CountPostByDate item : countPostByDates){
             CalendarDataCountPost calendarDataCountPost = new CalendarDataCountPost();
-            calendarDataCountPost.setDate(item.getDate());
+             calendarDataCountPost.setDate(item.getDate());
             calendarDataCountPost.setCountPost(item.getCountPost());
             calendarYearResponse.addPost(calendarDataCountPost);
 

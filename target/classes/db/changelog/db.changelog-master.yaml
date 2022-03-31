@@ -1,0 +1,241 @@
+databaseChangeLog:
+- changeSet:
+    id: create-table-users
+    author: kat (generated)
+    changes:
+        - sqlFile:
+              dbms: mysql
+              encoding: utf8
+              endDelimiter: \n/\s*\n|\n/\s*$
+              path: 01-create-table-users.sql
+              relativeToChangelogFile: true
+              splitStatements: true
+              stripComments: true
+- changeSet:
+      id: create-table-hibernate_seq
+      author: kat (generated)
+      changes:
+          - sqlFile:
+                dbms: mysql
+                encoding: utf8
+                endDelimiter: \n/\s*\n|\n/\s*$
+                path: 03-create-table-hibernate_seq.sql
+                relativeToChangelogFile: true
+                splitStatements: true
+                stripComments: true
+- changeSet:
+        id: add-0-hibernate-seq
+        author: kat (generated)
+        changes:
+              - sqlFile:
+                  dbms: mysql
+                  encoding:  utf8
+                  endDelimiter: \n/\s*\n|\n/\s*$
+                  path: 04-add-0-hibernate-seq.sql
+                  relativeToChangelogFile: true
+                  splitStatements: true
+                  stripComments: true
+- changeSet:
+    id: add-table-tag-post
+    author: kat (generated)
+    changes:
+      - sqlFile:
+          dbms: mysql
+          encoding:  utf8
+          endDelimiter: \n/\s*\n|\n/\s*$
+          path: 10-create-table-posts_tags.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
+- changeSet:
+    id: alter-table-post-keys-userid
+    author: kat (generated)
+    changes:
+      - sqlFile:
+          dbms: mysql
+          encoding:  utf8
+          endDelimiter: \n/\s*\n|\n/\s*$
+          path: 15-add-table-posts_key.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
+- changeSet:
+    id: create-table-postcomment
+    author: kat (generated)
+    changes:
+      - sqlFile:
+          dbms: mysql
+          encoding:  utf8
+          endDelimiter: \n/\s*\n|\n/\s*$
+          path: 20-create-table-postcomment.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
+- changeSet:
+    id: add-postcomment-parent
+    author: kat (generated)
+    changes:
+      - sqlFile:
+          dbms: mysql
+          encoding:  utf8
+          endDelimiter: \n/\s*\n|\n/\s*$
+          path: 25-add-postcomment-parent.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
+- changeSet:
+    id: add-postcomment-user
+    author: kat (generated)
+    changes:
+      - sqlFile:
+          dbms: mysql
+          encoding:  utf8
+          endDelimiter: \n/\s*\n|\n/\s*$
+          path: 30-add-postcomment-user.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
+- changeSet:
+    id: create-postvote
+    author: kat (generated)
+    changes:
+      - sqlFile:
+          dbms: mysql
+          encoding:  utf8
+          endDelimiter: \n/\s*\n|\n/\s*$
+          path: 35-create-table-postvoter.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
+- changeSet:
+    id: create-tag2post
+    author: kat (generated)
+    changes:
+      - sqlFile:
+          dbms: mysql
+          encoding:  utf8
+          endDelimiter: \n/\s*\n|\n/\s*$
+          path: 40-add-columns.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
+- changeSet:
+    id: create-global_settings-table
+    author: kat (generated)
+    changes:
+      - sqlFile:
+          dbms: mysql
+          encoding:  utf8
+          endDelimiter: \n/\s*\n|\n/\s*$
+          path: 50-add-table_global_settings.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
+- changeSet:
+    id: add-test-data-users
+    author: kat (generated)
+    changes:
+      - sqlFile:
+          dbms: mysql
+          encoding:  utf8
+          endDelimiter: \n/\s*\n|\n/\s*$
+          path: 60-add-test-data-users.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
+- changeSet:
+    id: add-test-data-posts
+    author: kat (generated)
+    changes:
+      - sqlFile:
+          dbms: mysql
+          encoding:  utf8
+          endDelimiter: \n/\s*\n|\n/\s*$
+          path: 70-add-test-data-post.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
+- changeSet:
+    id: add-test-data-votes
+    author: kat (generated)
+    changes:
+      - sqlFile:
+          dbms: mysql
+          encoding:  utf8
+          endDelimiter: \n/\s*\n|\n/\s*$
+          path: 80-add-test-data-votes.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
+- changeSet:
+    id: add-test-data-comment
+    author: kat (generated)
+    changes:
+      - sqlFile:
+          dbms: mysql
+          encoding:  utf8
+          endDelimiter: \n/\s*\n|\n/\s*$
+          path: 90-add-test-data-comment.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
+- changeSet:
+    id: add-test-data-post2
+    author: kat (generated)
+    changes:
+      - sqlFile:
+          dbms: mysql
+          encoding:  utf8
+          endDelimiter: \n/\s*\n|\n/\s*$
+          path: 95-add-test-data-comment.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
+- changeSet:
+    id: 100-add-test-data-post2
+    author: kat (generated)
+    changes:
+      - sqlFile:
+          dbms: mysql
+          encoding:  utf8
+          endDelimiter: \n/\s*\n|\n/\s*$
+          path: 100-add-test-data-votes.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
+- changeSet:
+    id: 105-add-test-data-tag
+    author: kat (generated)
+    changes:
+      - sqlFile:
+          dbms: mysql
+          encoding:  utf8
+          endDelimiter: \n/\s*\n|\n/\s*$
+          path: 105-add-test-data-tag.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
+- changeSet:
+    id: 110-add-test-data-tag2post
+    author: kat (generated)
+    changes:
+      - sqlFile:
+          dbms: mysql
+          encoding:  utf8
+          endDelimiter: \n/\s*\n|\n/\s*$
+          path: 110-add-test-data-tag2post.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
+- changeSet:
+    id: 115-delete-str-from-tag
+    author: kat (generated)
+    changes:
+      - sqlFile:
+          dbms: mysql
+          encoding:  utf8
+          endDelimiter: \n/\s*\n|\n/\s*$
+          path: 115-delete-str-from-tag.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
