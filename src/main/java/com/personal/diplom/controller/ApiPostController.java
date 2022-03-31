@@ -1,5 +1,6 @@
 package com.personal.diplom.controller;
 
+import com.personal.diplom.Servise.PostSearchServise;
 import com.personal.diplom.Servise.PostServise;
 import com.personal.diplom.api.response.PostsCountResponse;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,9 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class ApiPostController {
 
     private final PostServise postServise;
-
-    public ApiPostController(PostServise postServise) {
+    private final PostSearchServise postSearchServise;
+    public ApiPostController(PostServise postServise, PostSearchServise postSearchServise) {
         this.postServise = postServise;
+        this.postSearchServise = postSearchServise;
     }
 
     @RequestMapping(value = "/api/post", method = RequestMethod.GET)
@@ -22,15 +24,19 @@ public class ApiPostController {
         return postServise.getPostsCount(offset,limit, mode);
     }
 
+    @RequestMapping(value = "/api/post/search", method = RequestMethod.GET)
+    public PostsCountResponse postSearch(@RequestParam("offset") int offset,@RequestParam("limit") int limit, @RequestParam(value = "query",required = false) String query){
+        return postSearchServise.getPostsCount(offset,limit,query);
+    }
+
+
     @RequestMapping(value = "/api/post/{id}", method = RequestMethod.PUT)
     public int editPost(){
         return 5;
     }
 
-    @RequestMapping(value = "/api/post/search", method = RequestMethod.GET)
-    public int postSearch(){
-        return 41;
-    }
+
+
     @RequestMapping(value = "/api/post/byDate", method = RequestMethod.GET)
     public int postSearchByDate(){
         return 42;

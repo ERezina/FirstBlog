@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,6 +24,14 @@ public interface PostRepository extends PagingAndSortingRepository<Post,Integer>
                         "AND moderation_status = 'ACCEPTED' AND date <= sysdate()  ",
             nativeQuery = true)
     Page<Post> findAllPostPagination(Pageable pageable);
+
+    @Query(value = "SELECT * FROM Posts WHERE (text like concat('%',:query,'%') or concat('%',:query,'%') is null) and is_active = 1 AND moderation_status = 'ACCEPTED' AND date <= sysdate() ",
+            countQuery = "SELECT count(*) FROM Posts"+
+                    " WHERE is_active = 1  " +
+                    "AND moderation_status = 'ACCEPTED' AND date <= sysdate()  ",
+            nativeQuery = true)
+    Page<Post> findSearchPostPagination(Pageable pageable, @Param("query") String query);
+
 
       @Query(value = "SELECT p " +
             "FROM Post p "      +
@@ -43,4 +52,10 @@ public interface PostRepository extends PagingAndSortingRepository<Post,Integer>
             "ORDER BY COUNT(com) DESC"
     )
     Page<Post> findAllPostPaginationSortComment(Pageable pageable);
+
+    @Query(value = "SELECT count(p) FROM Post p "+
+            "WHERE p.isActive = 1  " +
+            "AND p.moderationStatus = 'ACCEPTED' AND p.date <= CURRENT_DATE()  "
+    )
+    Integer countPost();
 }
