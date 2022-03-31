@@ -24,18 +24,6 @@ databaseChangeLog:
                 splitStatements: true
                 stripComments: true
 - changeSet:
-      id: create-table-book
-      author: kat (generated)
-      changes:
-          - sqlFile:
-                dbms: mysql
-                encoding: utf8
-                endDelimiter: \n/\s*\n|\n/\s*$
-                path: 02-create-table-book.sql
-                relativeToChangelogFile: true
-                splitStatements: true
-                stripComments: true
-- changeSet:
         id: add-0-hibernate-seq
         author: kat (generated)
         changes:

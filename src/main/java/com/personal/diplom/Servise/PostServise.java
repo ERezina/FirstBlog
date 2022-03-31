@@ -5,6 +5,7 @@ import com.personal.diplom.api.response.PostsCountResponse;
 import com.personal.diplom.api.response.UserPostResponse;
 import com.personal.diplom.model.Post;
 import com.personal.diplom.repository.PostRepository;
+import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,6 +30,7 @@ public class PostServise {
     private UserService userService;
 
     private ArrayList<PostResponse> getAllPosts(int offset,int limit, String mode ){
+        String annonse = "";
         if(mode == null){mode = "recent"; }
 
       //  Pageable elem = PageRequest.of(offset,limit,Sort.by("date").descending());
@@ -66,7 +68,9 @@ public class PostServise {
             userPostResponse.setId(post.getUser().getId());
             postResponse.setUser(userPostResponse);
             postResponse.setTitle(post.getTitle());
-            postResponse.setAnnounce((post.getText().length()<150)?post.getText().substring(0,post.getText().length()):post.getText().substring(0,150));
+            annonse = post.getText();
+            annonse = Jsoup.parse(annonse).text();
+            postResponse.setAnnounce((annonse.length()<150)?annonse.substring(0,annonse.length()):annonse.substring(0,150));
             postResponse.setLikeCount((int)post.getCountLike());
             postResponse.setDislikeCount((int)post.getCountDislike());
             postResponse.setCommentCount(post.getCountComment());

@@ -1,7 +1,9 @@
 package com.personal.diplom.controller;
 
+import com.personal.diplom.Servise.CalendarServise;
 import com.personal.diplom.Servise.SettingsServise;
 import com.personal.diplom.Servise.TagServise;
+import com.personal.diplom.api.response.CalendarYearResponse;
 import com.personal.diplom.api.response.InitResponse;
 import com.personal.diplom.api.response.SettingsResponse;
 import com.personal.diplom.api.response.TagsResponse;
@@ -18,11 +20,13 @@ public class ApiGeneralController {
     private final SettingsServise settingsServise;
     private final InitResponse initResponse;
     private final TagServise tagServise;
+    private final CalendarServise calendarServise;
 
-    public ApiGeneralController(SettingsServise settingsServise, InitResponse initResponse, TagServise tagServise){
+    public ApiGeneralController(SettingsServise settingsServise, InitResponse initResponse, TagServise tagServise, CalendarServise calendarServise){
         this.settingsServise = settingsServise;
         this.initResponse = initResponse;
         this.tagServise = tagServise;
+        this.calendarServise = calendarServise;
     }
 
     @RequestMapping(value = "/api/init", method = RequestMethod.GET)
@@ -42,9 +46,12 @@ public class ApiGeneralController {
     }
 
     @RequestMapping(value = "/api/calendar", method = RequestMethod.GET)
-    public int getCalendar(){
-        return 232;
+    public CalendarYearResponse getCalendar(@RequestParam(value = "year",required = false) Integer year){
+
+        return calendarServise.getCalendarResponse(year);
     }
+
+
     @RequestMapping(value = "/api/image", method = RequestMethod.POST)
     public int uploadImage(){
         return 233;
