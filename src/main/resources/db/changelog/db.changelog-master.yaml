@@ -227,15 +227,3 @@ databaseChangeLog:
           relativeToChangelogFile: true
           splitStatements: true
           stripComments: true
-- changeSet:
-    id: 115-delete-str-from-tag
-    author: kat (generated)
-    changes:
-      - sqlFile:
-          dbms: mysql
-          encoding:  utf8
-          endDelimiter: \n/\s*\n|\n/\s*$
-          path: 115-delete-str-from-tag.sql
-          relativeToChangelogFile: true
-          splitStatements: true
-          stripComments: true

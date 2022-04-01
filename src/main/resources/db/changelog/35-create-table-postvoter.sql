@@ -4,7 +4,7 @@ CREATE TABLE post_votes (
   post_id int NOT NULL,
   user_id int NOT NULL,
   PRIMARY KEY (id),
-  FOREIGN KEY (post_id) REFERENCES posts(ID),
-  FOREIGN KEY (user_id) REFERENCES users(ID)
+  FOREIGN KEY (post_id) REFERENCES posts(id),
+  FOREIGN KEY (user_id) REFERENCES users(id)
  )
 /

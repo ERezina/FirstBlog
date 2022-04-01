@@ -13,7 +13,5 @@ VALUES ("политика")
 INSERT INTO tags(name)
 VALUES ("фильмы")
 /
-INSERT INTO tags(name)
-VALUES ("автомобили")
-/
+
 

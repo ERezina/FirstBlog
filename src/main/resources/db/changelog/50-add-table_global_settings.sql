@@ -1,6 +1,6 @@
 CREATE TABLE global_settings
 (
-	ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	code varchar(255) NOT NULL,
 	name varchar(255) NOT NULL,
 	value_settings varchar(255) NOT NULL

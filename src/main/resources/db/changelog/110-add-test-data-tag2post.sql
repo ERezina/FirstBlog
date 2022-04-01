@@ -19,7 +19,5 @@ VALUES (5,4)
 INSERT INTO tag2post(post_id,tag_id)
 VALUES (10,1)
 /
-INSERT INTO tag2post(post_id,tag_id)
-VALUES (11,6)
-/
+
 

@@ -5,7 +5,7 @@ INSERT INTO posts(date,is_active,moderation_status,text,title,view_count,moderat
 VALUES (STR_TO_DATE('26/01/2020','%d/%m/%Y'), 0, 'NEW','текс2 текст2 текст2 текс2 текст2 текст2текс2 текст2 текст2текс2 текст2 текст2текс2 текст2 текст2текс2 текст2 текст2текс2 текст2 текст2','Заголовок5',3,1,3  )
 /
 INSERT INTO posts(date,is_active,moderation_status,text,title,view_count,moderator_id,user_id)
-VALUES (STR_TO_DATE('27/01/2020','%d/%m/%Y'), 1, 'ACCEPTED','текст3 текст3 текст3 текст3 текст3 текст3текст3 текст3 текст3текст3 текст3 текст3текст3 текст3 текст3текст3 текст3 текст3текст3 текст3 текст3текст3 текст3 текст3','Заголовок6',10,1,2  )
+VALUES (STR_TO_DATE('27/01/2020','%d/%m/%Y'), 1, 'ACCEPTED','<head>текст3 </head> текст3 <title>текст3 </title>текст3 текст3 текст3текст3 текст3 текст3текст3 текст3 текст3текст3 текст3 текст3текст3 текст3 текст3текст3 текст3 текст3текст3 текст3 текст3','Заголовок6',10,1,2  )
 /
 INSERT INTO posts(date,is_active,moderation_status,text,title,view_count,moderator_id,user_id)
 VALUES (STR_TO_DATE('25/05/2020','%d/%m/%Y'), 1, 'ACCEPTED','текс7 текс7т текс7т текс7 текс7т текс7ттекс7 текс7т текс7ттекс7 текс7т текс7ттекс7 текс7т текс7ттекс7 текс7т текс7т','Заголовок7',1,1,2  )
