@@ -1,5 +1,6 @@
 package com.personal.diplom.controller;
 
+import com.personal.diplom.Servise.PostSearchByDateServise;
 import com.personal.diplom.Servise.PostSearchServise;
 import com.personal.diplom.Servise.PostServise;
 import com.personal.diplom.api.response.PostsCountResponse;
@@ -13,9 +14,12 @@ public class ApiPostController {
 
     private final PostServise postServise;
     private final PostSearchServise postSearchServise;
-    public ApiPostController(PostServise postServise, PostSearchServise postSearchServise) {
+    private final PostSearchByDateServise postSearchByDateServise;
+
+    public ApiPostController(PostServise postServise, PostSearchServise postSearchServise, PostSearchByDateServise postSearchByDateServise) {
         this.postServise = postServise;
         this.postSearchServise = postSearchServise;
+        this.postSearchByDateServise = postSearchByDateServise;
     }
 
     @RequestMapping(value = "/api/post", method = RequestMethod.GET)
@@ -29,6 +33,10 @@ public class ApiPostController {
         return postSearchServise.getPostsCount(offset,limit,query);
     }
 
+    @RequestMapping(value = "/api/post/byDate", method = RequestMethod.GET)
+    public PostsCountResponse postSearchByDate(@RequestParam("offset") int offset,@RequestParam("limit") int limit, @RequestParam(value = "date",required = false) String query){
+        return postSearchByDateServise.getPostsCount(offset,limit,query);
+    }
 
     @RequestMapping(value = "/api/post/{id}", method = RequestMethod.PUT)
     public int editPost(){
@@ -37,10 +45,7 @@ public class ApiPostController {
 
 
 
-    @RequestMapping(value = "/api/post/byDate", method = RequestMethod.GET)
-    public int postSearchByDate(){
-        return 42;
-    }
+
 
     @RequestMapping(value = "/api/post/byTag", method = RequestMethod.GET)
     public int postSearchByTag(){

@@ -11,6 +11,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -31,6 +32,15 @@ public interface PostRepository extends PagingAndSortingRepository<Post,Integer>
                     "AND moderation_status = 'ACCEPTED' AND date <= sysdate()  ",
             nativeQuery = true)
     Page<Post> findSearchPostPagination(Pageable pageable, @Param("query") String query);
+
+    @Query(value = "SELECT * FROM Posts " +
+            "WHERE DATE_FORMAT(date, '%Y-%m-%d') = :query " +
+            "and is_active = 1 AND moderation_status = 'ACCEPTED' AND date <= sysdate() ",
+            countQuery = "SELECT count(*) FROM Posts"+
+                    " WHERE is_active = 1  " +
+                    "AND moderation_status = 'ACCEPTED' AND date <= sysdate()  ",
+            nativeQuery = true)
+    Page<Post> findPostByDate(Pageable pageable, @Param("query") String query);
 
 
       @Query(value = "SELECT p " +
