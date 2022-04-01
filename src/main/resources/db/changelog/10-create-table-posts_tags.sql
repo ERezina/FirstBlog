@@ -7,6 +7,6 @@ CREATE TABLE posts (
   title varchar(255) NOT NULL,
   view_count int NOT NULL,
   moderator_id int,
-  FOREIGN KEY (moderator_id) REFERENCES USERS(ID)
+  FOREIGN KEY (moderator_id) REFERENCES users(id)
 )
 /
