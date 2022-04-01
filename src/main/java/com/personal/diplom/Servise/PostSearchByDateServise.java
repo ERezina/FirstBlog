@@ -21,27 +21,24 @@ import java.util.Date;
 import java.util.TimeZone;
 
 @Service
-public class PostSearchServise {
+public class PostSearchByDateServise {
     @Autowired
     private PostRepository postRepository;
     @Autowired
     private UserService userService;
 
     private ArrayList<PostResponse> getAllPosts(int offset,int limit, String query ){
-       // if(mode == null){mode = "recent"; }
-
-      //  Pageable elem = PageRequest.of(offset,limit,Sort.by("date").descending());
-        String annonse = "";
+      String annonse = "";
         Pageable elem = PageRequest.of(offset,limit);
         Page<Post> allProductsSortedByName;
         elem  = PageRequest.of(offset,limit,Sort.by("date").descending());
-        allProductsSortedByName = postRepository.findSearchPostPagination(elem,query);
+        allProductsSortedByName = postRepository.findPostByDate(elem,query);
 
         ArrayList<PostResponse> postResponses = new ArrayList<PostResponse>();
         PostResponse postResponse;
         UserPostResponse userPostResponse ;
         for(Post post: allProductsSortedByName.getContent()){
-           postResponse = new PostResponse();
+            postResponse = new PostResponse();
             postResponse.setId(post.getId());
             System.out.println("Дата в строке "+post.getDate().toString().substring(0,10));
             LocalDate localD =  LocalDate.parse(post.getDate().toString().substring(0,10));
@@ -77,7 +74,7 @@ public class PostSearchServise {
 
         }
 
-       return postsCountResponse;
+        return postsCountResponse;
     }
 
 

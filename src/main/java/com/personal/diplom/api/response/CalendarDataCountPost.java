@@ -3,22 +3,22 @@ package com.personal.diplom.api.response;
 import java.util.Date;
 
 public class CalendarDataCountPost {
-    private Date date;
-    private Double countPost;
+    private String date;
+    private int countPost;
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
-    public Double getCountPost() {
+    public int getCountPost() {
         return countPost;
     }
 
-    public void setCountPost(Double countPost) {
+    public void setCountPost(int countPost) {
         this.countPost = countPost;
     }
 
