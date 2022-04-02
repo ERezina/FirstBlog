@@ -16,17 +16,15 @@ import java.util.List;
 @Repository
 public interface PostRepository extends PagingAndSortingRepository<Post,Integer> {
 
-   // List<Post> findAllByPrice(double price, Pageable pageable);
-
-    @Query(value = "SELECT * FROM Posts WHERE is_active = 1 AND moderation_status = 'ACCEPTED' AND date <= sysdate() ",
-            countQuery = "SELECT count(*) FROM Posts"+
+    @Query(value = "SELECT * FROM posts WHERE is_active = 1 AND moderation_status = 'ACCEPTED' AND date <= sysdate() ",
+            countQuery = "SELECT count(*) FROM posts"+
                         " WHERE is_active = 1  " +
                         "AND moderation_status = 'ACCEPTED' AND date <= sysdate()  ",
             nativeQuery = true)
     Page<Post> findAllPostPagination(Pageable pageable);
 
-    @Query(value = "SELECT * FROM Posts WHERE (text like concat('%',:query,'%') or concat('%',:query,'%') is null) and is_active = 1 AND moderation_status = 'ACCEPTED' AND date <= sysdate() ",
-            countQuery = "SELECT count(*) FROM Posts"+
+    @Query(value = "SELECT * FROM posts WHERE (text like concat('%',:query,'%') or concat('%',:query,'%') is null) and is_active = 1 AND moderation_status = 'ACCEPTED' AND date <= sysdate() ",
+            countQuery = "SELECT count(*) FROM posts"+
                     " WHERE is_active = 1  " +
                     "AND moderation_status = 'ACCEPTED' AND date <= sysdate()  ",
             nativeQuery = true)
