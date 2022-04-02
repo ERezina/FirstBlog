@@ -1,5 +1,6 @@
 package com.personal.diplom.Servise;
 
+import com.personal.diplom.Servise.util.PostResponseWork;
 import com.personal.diplom.api.response.PostResponse;
 import com.personal.diplom.api.response.PostsCountResponse;
 import com.personal.diplom.api.response.UserPostResponse;
@@ -30,11 +31,7 @@ public class PostServise {
     private UserService userService;
 
     private ArrayList<PostResponse> getAllPosts(int offset,int limit, String mode ){
-        String annonse = "";
         if(mode == null){mode = "recent"; }
-
-      //  Pageable elem = PageRequest.of(offset,limit,Sort.by("date").descending());
-
         Pageable elem = PageRequest.of(offset,limit);
         Page<Post> allProductsSortedByName;
         switch (mode) {
@@ -51,31 +48,9 @@ public class PostServise {
         }
 
         ArrayList<PostResponse> postResponses = new ArrayList<PostResponse>();
-        PostResponse postResponse;
-        UserPostResponse userPostResponse ;
+        PostResponseWork postResponseWork = new PostResponseWork();
         for(Post post: allProductsSortedByName.getContent()){
-           postResponse = new PostResponse();
-            postResponse.setId(post.getId());
-            System.out.println("Дата в строке "+post.getDate().toString().substring(0,10));
-            LocalDate localD =  LocalDate.parse(post.getDate().toString().substring(0,10));
-            LocalTime time = LocalTime.parse("00:00:00");
-            ZoneOffset zone = ZoneOffset.of("Z");
-            Date datePost = post.getDate();
-            TimeZone.setDefault( TimeZone.getTimeZone("UTC"));
-            postResponse.setTimestamp(localD.toEpochSecond(time, zone));
-            userPostResponse = new UserPostResponse();
-            userPostResponse.setName(post.getUser().getName());
-            userPostResponse.setId(post.getUser().getId());
-            postResponse.setUser(userPostResponse);
-            postResponse.setTitle(post.getTitle());
-            annonse = post.getText();
-            annonse = Jsoup.parse(annonse).text();
-            postResponse.setAnnounce((annonse.length()<150)?annonse.substring(0,annonse.length()):annonse.substring(0,150));
-            postResponse.setLikeCount((int)post.getCountLike());
-            postResponse.setDislikeCount((int)post.getCountDislike());
-            postResponse.setCommentCount(post.getCountComment());
-            postResponse.setViewCount(post.getViewCount());
-            postResponses.add(postResponse);
+            postResponses.add(postResponseWork.copyToPostResponse(post));
         }
         return postResponses;
     }

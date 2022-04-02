@@ -67,4 +67,15 @@ public interface PostRepository extends PagingAndSortingRepository<Post,Integer>
             "AND p.moderationStatus = 'ACCEPTED' AND p.date <= CURRENT_DATE()  "
     )
     Integer countPost();
+
+    @Query(value = "SELECT p " +
+            "FROM Post p "      +
+            "JOIN p.postTags t  "+
+            "WHERE p.isActive = 1  " +
+            "AND p.moderationStatus = 'ACCEPTED' AND p.date <= CURRENT_DATE() " +
+            "and t.id = 1 "
+             )
+    Page<Post> findPostByTag(Pageable pageable, @Param("tag") String tag);
+
+
 }
