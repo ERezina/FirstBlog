@@ -35,19 +35,23 @@ public interface PostRepository extends PagingAndSortingRepository<Post,Integer>
             "FROM Post p "      +
               "LEFT JOIN p.postVotesCollection pvl  "+
               "WHERE p.isActive = 1  " +
-              "AND p.moderationStatus = 'ACCEPTED' AND p.date <= CURRENT_DATE()  " +
+              "AND p.moderationStatus = 'ACCEPTED' AND p.date <= current_timestamp()  " +
               "GROUP BY p.id " +
               "ORDER BY SUM(pvl.value_votes) DESC"
-      )
+             )
     Page<Post> findAllPostPaginationSortVotes(Pageable pageable);
 
     @Query(value = "SELECT p " +
             "FROM Post p "      +
             "LEFT JOIN p.commentCollection com  "+
             "WHERE p.isActive = 1  " +
-            "AND p.moderationStatus = 'ACCEPTED' AND p.date <= CURRENT_DATE()  " +
+            "AND p.moderationStatus = 'ACCEPTED' AND p.date <= current_timestamp()  " +
             "GROUP BY p.id " +
-            "ORDER BY COUNT(com) DESC"
+            "ORDER BY COUNT(com) DESC",
+            countQuery = "SELECT count(p) " +
+                    "FROM Post p "      +
+                    "WHERE p.isActive = 1  " +
+                    "AND p.moderationStatus = 'ACCEPTED' AND p.date <= CURRENT_DATE()  "
     )
     Page<Post> findAllPostPaginationSortComment(Pageable pageable);
 

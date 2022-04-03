@@ -38,7 +38,7 @@ public class PostServise {
         Pageable elem = PageRequest.of(offset,limit);
         Page<Post> allProductsSortedByName;
         switch (mode) {
-            case "best" :  allProductsSortedByName = postRepository.findAllPostPaginationSortVotes(elem);
+            case "best" : allProductsSortedByName = postRepository.findAllPostPaginationSortVotes(elem);
                         break;
             case "popular"  : allProductsSortedByName = postRepository.findAllPostPaginationSortComment(elem);
                                 break;
