@@ -77,5 +77,10 @@ public interface PostRepository extends PagingAndSortingRepository<Post,Integer>
              )
     Page<Post> findPostByTag(Pageable pageable, @Param("tag") String tag);
 
+    @Query(value = "SELECT * FROM Posts WHERE id = :query and is_active = 1 " +
+            "AND moderation_status = 'ACCEPTED' " +
+            "AND date <= sysdate() ",
+             nativeQuery = true)
+    Post findPostById(@Param("query") int query);
 
 }

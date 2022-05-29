@@ -3,6 +3,7 @@ package com.personal.diplom.Servise.util;
 import com.personal.diplom.api.response.PostResponse;
 import com.personal.diplom.api.response.UserPostResponse;
 import com.personal.diplom.model.Post;
+import com.personal.diplom.model.User;
 import org.jsoup.Jsoup;
 
 import java.time.LocalDate;
@@ -39,6 +40,13 @@ public class PostResponseWork {
         postResponse.setCommentCount(post.getCountComment());
         postResponse.setViewCount(post.getViewCount());
         return postResponse;
+    }
+
+    public static UserPostResponse copyUserPostResponse(User user){
+        UserPostResponse userPostResponse = new UserPostResponse();
+        userPostResponse.setId(user.getId());
+        userPostResponse.setName(user.getName());
+        return userPostResponse;
     }
 
 }

@@ -4,11 +4,10 @@ import com.personal.diplom.Servise.PostSearchByDateServise;
 import com.personal.diplom.Servise.PostSearchByTagService;
 import com.personal.diplom.Servise.PostSearchServise;
 import com.personal.diplom.Servise.PostServise;
+import com.personal.diplom.api.response.PostIdResponse;
 import com.personal.diplom.api.response.PostsCountResponse;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ApiPostController {
@@ -48,14 +47,15 @@ public class ApiPostController {
     }
 
 
-    @RequestMapping(value = "/api/post/{id}", method = RequestMethod.PUT)
+  /*  @RequestMapping(value = "/api/post/{id}", method = RequestMethod.PUT)
     public int editPost(){
         return 5;
     }
-
+*/
     @RequestMapping(value = "/api/post/{ID}", method = RequestMethod.GET)
-    public int postSearchByID(){
-        return 44;
+    public ResponseEntity postSearchByID(@PathVariable("ID") String id){
+
+        return postServise.getPostById(Integer.valueOf(id));
     }
 
     @RequestMapping(value = "/api/post/moderation", method = RequestMethod.GET)
