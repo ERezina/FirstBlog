@@ -41,6 +41,15 @@ public interface PostRepository extends PagingAndSortingRepository<Post,Integer>
              )
     Page<Post> findAllPostPaginationSortVotes(Pageable pageable);
 
+    @Query(value = "SELECT * FROM Posts " +
+            "WHERE DATE_FORMAT(date, '%Y-%m-%d') = :query " +
+            "and is_active = 1 AND moderation_status = 'ACCEPTED' AND date <= sysdate() ",
+            countQuery = "SELECT count(*) FROM Posts"+
+                    " WHERE is_active = 1  " +
+                    "AND moderation_status = 'ACCEPTED' AND date <= sysdate()  ",
+            nativeQuery = true)
+    Page<Post> findPostByDate(Pageable pageable, @Param("query") String query);
+
     @Query(value = "SELECT p " +
             "FROM Post p "      +
             "LEFT JOIN p.commentCollection com  "+
@@ -60,4 +69,20 @@ public interface PostRepository extends PagingAndSortingRepository<Post,Integer>
             "AND p.moderationStatus = 'ACCEPTED' AND p.date <= CURRENT_DATE()  "
     )
     Integer countPost();
+
+    @Query(value = "SELECT p " +
+            "FROM Post p "      +
+            "JOIN p.postTags t  "+
+            "WHERE p.isActive = 1  " +
+            "AND p.moderationStatus = 'ACCEPTED' AND p.date <= CURRENT_DATE() " +
+            "and t.id = 1 "
+             )
+    Page<Post> findPostByTag(Pageable pageable, @Param("tag") String tag);
+
+    @Query(value = "SELECT * FROM Posts WHERE id = :query and is_active = 1 " +
+            "AND moderation_status = 'ACCEPTED' " +
+            "AND date <= sysdate() ",
+             nativeQuery = true)
+    Post findPostById(@Param("query") int query);
+
 }

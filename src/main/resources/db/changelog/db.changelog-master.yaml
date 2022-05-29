@@ -227,3 +227,15 @@ databaseChangeLog:
           relativeToChangelogFile: true
           splitStatements: true
           stripComments: true
+- changeSet:
+      id: 120-create-table-captcha
+      author: kat (generated)
+      changes:
+          - sqlFile:
+                dbms: mysql
+                encoding:  utf8
+                endDelimiter: \n/\s*\n|\n/\s*$
+                path: 120-create-table-captcha.sql
+                relativeToChangelogFile: true
+                splitStatements: true
+                stripComments: true

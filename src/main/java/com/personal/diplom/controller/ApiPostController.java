@@ -1,21 +1,27 @@
 package com.personal.diplom.controller;
 
+import com.personal.diplom.Servise.PostSearchByDateServise;
+import com.personal.diplom.Servise.PostSearchByTagService;
 import com.personal.diplom.Servise.PostSearchServise;
 import com.personal.diplom.Servise.PostServise;
+import com.personal.diplom.api.response.PostIdResponse;
 import com.personal.diplom.api.response.PostsCountResponse;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ApiPostController {
 
     private final PostServise postServise;
     private final PostSearchServise postSearchServise;
-    public ApiPostController(PostServise postServise, PostSearchServise postSearchServise) {
+    private final PostSearchByDateServise postSearchByDateServise;
+    private final PostSearchByTagService postSearchByTagService;
+
+    public ApiPostController(PostServise postServise, PostSearchServise postSearchServise, PostSearchByDateServise postSearchByDateServise, PostSearchByTagService postSearchByTagService) {
         this.postServise = postServise;
         this.postSearchServise = postSearchServise;
+        this.postSearchByDateServise = postSearchByDateServise;
+        this.postSearchByTagService = postSearchByTagService;
     }
 
     @RequestMapping(value = "/api/post", method = RequestMethod.GET)
@@ -29,27 +35,27 @@ public class ApiPostController {
         return postSearchServise.getPostsCount(offset,limit,query);
     }
 
-
-    @RequestMapping(value = "/api/post/{id}", method = RequestMethod.PUT)
-    public int editPost(){
-        return 5;
-    }
-
-
-
     @RequestMapping(value = "/api/post/byDate", method = RequestMethod.GET)
-    public int postSearchByDate(){
-        return 42;
+    public PostsCountResponse postSearchByDate(@RequestParam("offset") int offset,@RequestParam("limit") int limit, @RequestParam(value = "date",required = false) String query){
+        return postSearchByDateServise.getPostsCount(offset,limit,query);
     }
 
     @RequestMapping(value = "/api/post/byTag", method = RequestMethod.GET)
-    public int postSearchByTag(){
-        return 43;
+    public PostsCountResponse postSearchByTag(@RequestParam("offset") int offset,@RequestParam("limit") int limit, @RequestParam(value = "tag",required = false) String tag){
+
+        return postSearchByTagService.getPostsCount(offset,limit,tag);
     }
 
+
+  /*  @RequestMapping(value = "/api/post/{id}", method = RequestMethod.PUT)
+    public int editPost(){
+        return 5;
+    }
+*/
     @RequestMapping(value = "/api/post/{ID}", method = RequestMethod.GET)
-    public int postSearchByID(){
-        return 44;
+    public ResponseEntity postSearchByID(@PathVariable("ID") String id){
+
+        return postServise.getPostById(Integer.valueOf(id));
     }
 
     @RequestMapping(value = "/api/post/moderation", method = RequestMethod.GET)

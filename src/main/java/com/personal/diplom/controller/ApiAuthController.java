@@ -1,12 +1,24 @@
 package com.personal.diplom.controller;
 
-import org.springframework.web.bind.annotation.Mapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import com.personal.diplom.Servise.CaptchaService;
+import com.personal.diplom.Servise.UserService;
+import com.personal.diplom.api.request.UserRegisterRequest;
+import com.personal.diplom.api.response.CaptchaResponse;
+import com.personal.diplom.api.response.UserRegisterResponse;
+import org.springframework.data.repository.query.Param;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 @RestController
 public class ApiAuthController {
+
+    private final CaptchaService captchaService;
+    private final UserService userService;
+    public ApiAuthController(CaptchaService captchaService, UserService userService) {
+        this.captchaService = captchaService;
+        this.userService = userService;
+    }
 
     @RequestMapping(value = "/api/auth" , method = RequestMethod.GET)
     public boolean add(){
@@ -19,13 +31,19 @@ public class ApiAuthController {
     }
 
     @RequestMapping(value = "/api/auth/captcha" , method = RequestMethod.GET)
-    public int captcha(){
-        return 3;
+    public CaptchaResponse captcha() throws IOException {
+        return captchaService.createEncodeString();
     }
 
     @RequestMapping(value = "/api/auth/register" , method = RequestMethod.POST)
-    public int register(){
-        return 4;
+    public UserRegisterResponse register(@RequestBody UserRegisterRequest userRegisterRequest
+                     ){
+
+        return userService.addUser(userRegisterRequest.getE_mail(),
+                                    userRegisterRequest.getPassword(),
+                                    userRegisterRequest.getName(),
+                                    userRegisterRequest.getCaptcha(),
+                                    userRegisterRequest.getCaptcha_secret());
     }
 
     @RequestMapping(value = "/api/auth/login" , method = RequestMethod.POST)

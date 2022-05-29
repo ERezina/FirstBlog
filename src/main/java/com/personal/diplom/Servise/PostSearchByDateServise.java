@@ -22,39 +22,37 @@ import java.util.Date;
 import java.util.TimeZone;
 
 @Service
-public class PostSearchServise {
+public class PostSearchByDateServise {
     @Autowired
     private PostRepository postRepository;
     @Autowired
     private UserService userService;
 
-    private ArrayList<PostResponse> getAllPosts(int offset,int limit, String query ){
-
-
+    private ArrayList<PostResponse> getAllPosts(int offset,int limit, String tag ){
         Pageable elem = PageRequest.of(offset,limit);
         Page<Post> allProductsSortedByName;
         elem  = PageRequest.of(offset,limit,Sort.by("date").descending());
-        allProductsSortedByName = postRepository.findSearchPostPagination(elem,query);
+        allProductsSortedByName = postRepository.findPostByDate(elem,tag);
 
         ArrayList<PostResponse> postResponses = new ArrayList<PostResponse>();
         PostResponseWork postResponseWork = new PostResponseWork();
         for(Post post: allProductsSortedByName.getContent()){
-           postResponses.add(postResponseWork.copyToPostResponse(post));
+            postResponses.add(postResponseWork.copyToPostResponse(post));
         }
         return postResponses;
     }
 
-    public PostsCountResponse getPostsCount(int offset,int limit, String query  ){
+    public PostsCountResponse getPostsCount(int offset,int limit, String tag  ){
         PostsCountResponse postsCountResponse = new PostsCountResponse();
         try {
-            postsCountResponse.addPost(getAllPosts(offset,limit,query));
+            postsCountResponse.addPost(getAllPosts(offset,limit,tag));
             postsCountResponse.setCount(postsCountResponse.getPosts().size());
         }
         catch (Exception e){
 
         }
 
-       return postsCountResponse;
+        return postsCountResponse;
     }
 
 
