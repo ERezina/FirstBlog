@@ -48,11 +48,11 @@ public class UserService {
             System.out.println("нет @");
             userCheckResponse.setEmail("e-mail введён неправильно");
         }else {
-            List<User> listUser = userRepository.findByEmail(email);
-            System.out.println("listUser.size() "+listUser.size());
-            if (listUser.size() > 0) {
-                userCheckResponse.setEmail("Этот e-mail уже зарегистрирован");
-            }
+            Optional<User> listUser = userRepository.findByEmail(email);
+         //   System.out.println("listUser.size() "+listUser.size());
+            //    if (listUser.size() > 0) {
+              //  userCheckResponse.setEmail("Этот e-mail уже зарегистрирован");
+            //}
         }
         if(password.length() < 6 ){  userCheckResponse.setPassword("Пароль короче 6-ти символов");}
         List<CaptchaCode> listCaptha =  captchaRepository.findBySecretCode(secret);

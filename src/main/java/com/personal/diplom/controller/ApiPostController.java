@@ -7,6 +7,7 @@ import com.personal.diplom.Servise.PostServise;
 import com.personal.diplom.api.response.PostIdResponse;
 import com.personal.diplom.api.response.PostsCountResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,12 +26,14 @@ public class ApiPostController {
     }
 
     @RequestMapping(value = "/api/post", method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('user:write')")
     public PostsCountResponse setPost(@RequestParam("offset") int offset,@RequestParam("limit") int limit, @RequestParam("mode") String mode){
     //    PostsCountResponse postsCountResponse = new PostsCountResponse();
         return postServise.getPostsCount(offset,limit, mode);
     }
 
     @RequestMapping(value = "/api/post/search", method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('user:moderate')")
     public PostsCountResponse postSearch(@RequestParam("offset") int offset,@RequestParam("limit") int limit, @RequestParam(value = "query",required = false) String query){
         return postSearchServise.getPostsCount(offset,limit,query);
     }
