@@ -1,14 +1,12 @@
 package com.personal.diplom.controller;
 
-import com.personal.diplom.Servise.PostSearchByDateServise;
-import com.personal.diplom.Servise.PostSearchByTagService;
-import com.personal.diplom.Servise.PostSearchServise;
-import com.personal.diplom.Servise.PostServise;
-import com.personal.diplom.api.response.PostIdResponse;
+import com.personal.diplom.Servise.*;
 import com.personal.diplom.api.response.PostsCountResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 @RestController
 public class ApiPostController {
@@ -17,23 +15,24 @@ public class ApiPostController {
     private final PostSearchServise postSearchServise;
     private final PostSearchByDateServise postSearchByDateServise;
     private final PostSearchByTagService postSearchByTagService;
+    private final UserService userService;
 
-    public ApiPostController(PostServise postServise, PostSearchServise postSearchServise, PostSearchByDateServise postSearchByDateServise, PostSearchByTagService postSearchByTagService) {
+    public ApiPostController(PostServise postServise, PostSearchServise postSearchServise, PostSearchByDateServise postSearchByDateServise, PostSearchByTagService postSearchByTagService, UserService userService) {
         this.postServise = postServise;
         this.postSearchServise = postSearchServise;
         this.postSearchByDateServise = postSearchByDateServise;
         this.postSearchByTagService = postSearchByTagService;
+        this.userService = userService;
     }
 
     @RequestMapping(value = "/api/post", method = RequestMethod.GET)
-    @PreAuthorize("hasAuthority('user:write')")
     public PostsCountResponse setPost(@RequestParam("offset") int offset,@RequestParam("limit") int limit, @RequestParam("mode") String mode){
     //    PostsCountResponse postsCountResponse = new PostsCountResponse();
         return postServise.getPostsCount(offset,limit, mode);
     }
 
     @RequestMapping(value = "/api/post/search", method = RequestMethod.GET)
-    @PreAuthorize("hasAuthority('user:moderate')")
+  //  @PreAuthorize("hasAuthority('user:moderate')")
     public PostsCountResponse postSearch(@RequestParam("offset") int offset,@RequestParam("limit") int limit, @RequestParam(value = "query",required = false) String query){
         return postSearchServise.getPostsCount(offset,limit,query);
     }
@@ -50,11 +49,6 @@ public class ApiPostController {
     }
 
 
-  /*  @RequestMapping(value = "/api/post/{id}", method = RequestMethod.PUT)
-    public int editPost(){
-        return 5;
-    }
-*/
     @RequestMapping(value = "/api/post/{ID}", method = RequestMethod.GET)
     public ResponseEntity postSearchByID(@PathVariable("ID") String id){
 
@@ -67,8 +61,16 @@ public class ApiPostController {
     }
 
     @RequestMapping(value = "/api/post/my", method = RequestMethod.GET)
-    public int postListMy(){
-        return 46;
+    @PreAuthorize("hasAuthority('user:write')")
+    public ResponseEntity<PostsCountResponse> postListMy(@RequestParam("offset") int offset
+                                                        ,@RequestParam("limit") int limit
+                                                        ,@RequestParam("status") String status
+                                                        , Principal principal){
+        if (principal == null){
+            return ResponseEntity.ok(new PostsCountResponse());
+        }
+        System.out.println("NAME "+userService.getUserId(principal.getName()));
+        return ResponseEntity.ok(postSearchServise.getPostsUser(offset,limit,status,userService.getUserId(principal.getName())));
     }
 
     @RequestMapping(value = "/api/post/like", method = RequestMethod.POST)

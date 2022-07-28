@@ -34,12 +34,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/**").permitAll()
-                .anyRequest()
-                .authenticated()
-                .and().formLogin().disable()
-                .httpBasic();
+                .antMatchers("/**").permitAll()  //всё разрешено
+                .antMatchers("/login").permitAll()
+                .anyRequest().authenticated()
+                .and().formLogin().disable()//.successForwardUrl("/api/post")
+                .logout().logoutUrl("/logout")
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID");
+        ;
     }
+
 
 
     @Bean

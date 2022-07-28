@@ -29,8 +29,6 @@ public class PostSearchServise {
     private UserService userService;
 
     private ArrayList<PostResponse> getAllPosts(int offset,int limit, String query ){
-
-
         Pageable elem = PageRequest.of(offset,limit);
         Page<Post> allProductsSortedByName;
         elem  = PageRequest.of(offset,limit,Sort.by("date").descending());
@@ -57,5 +55,30 @@ public class PostSearchServise {
        return postsCountResponse;
     }
 
+    public PostsCountResponse getPostsUser(int offset,int limit, String status, long idUser  ){
+        PostsCountResponse postsCountResponse = new PostsCountResponse();
+        try {
+            postsCountResponse.addPost(getAllPostsUser(offset,limit,status,idUser));
+            postsCountResponse.setCount(postsCountResponse.getPosts().size());
+        }
+        catch (Exception e){
 
+        }
+
+        return postsCountResponse;
+    }
+
+    private ArrayList<PostResponse> getAllPostsUser(int offset,int limit, String status, long idUser ){
+        Pageable elem = PageRequest.of(offset,limit);
+        Page<Post> allProductsSortedByName;
+        elem  = PageRequest.of(offset,limit,Sort.by("date").descending());
+        allProductsSortedByName = postRepository.findSearchPostUserPagination(elem,status,idUser);
+
+        ArrayList<PostResponse> postResponses = new ArrayList<PostResponse>();
+        PostResponseWork postResponseWork = new PostResponseWork();
+        for(Post post: allProductsSortedByName.getContent()){
+            postResponses.add(postResponseWork.copyToPostResponse(post));
+        }
+        return postResponses;
+    }
 }

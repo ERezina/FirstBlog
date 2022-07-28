@@ -16,6 +16,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.security.Principal;
+import java.util.Optional;
 
 @RestController
 public class ApiAuthController {
@@ -41,26 +43,17 @@ public class ApiAuthController {
         );
         SecurityContextHolder.getContext().setAuthentication(auth);
         User user = (User) auth.getPrincipal();
-        com.personal.diplom.model.User currentUser = userRepository.findByEmail(user.getUsername()).orElseThrow(
-                () -> new UsernameNotFoundException(user.getUsername())
-        );
-        UserLoginResponse userLoginResponse = new UserLoginResponse();
-        userLoginResponse.setEmail(currentUser.getEmail());
-        userLoginResponse.setModeration(currentUser.getIsModerator() == 1 );
-        userLoginResponse.setId(currentUser.getId());
-
         LoginResponse loginResponse = new LoginResponse();
-        loginResponse.setResult(true);
-        loginResponse.setUserLoginResponse(userLoginResponse);
-
-        System.out.println(loginRequest.getEmail());
-        System.out.println((loginRequest.getPassword()));
-        return ResponseEntity.ok(new LoginResponse());
+        loginResponse = getLoginResponse(user.getUsername());
+        return ResponseEntity.ok(loginResponse);
     }
 
     @RequestMapping(value = "/api/auth/check" , method = RequestMethod.GET)
-    public int check(){
-        return 1;
+    public ResponseEntity<LoginResponse> check(Principal principal){
+        if (principal == null){
+            return ResponseEntity.ok(new LoginResponse());
+        }
+        return ResponseEntity.ok(getLoginResponse(principal.getName()));
     }
 
     @RequestMapping(value = "/api/auth/captcha" , method = RequestMethod.GET)
@@ -95,8 +88,27 @@ public class ApiAuthController {
     }
 
     @RequestMapping(value = "/api/auth/logout" , method = RequestMethod.GET)
-    public int logout(){
-        return 8;
+    public ResponseEntity<ResponseResult> logout(){
+        return ResponseEntity.ok(new ResponseResult(true));
     }
 
+
+    private LoginResponse getLoginResponse(String email){
+        Optional<com.personal.diplom.model.User> currentUserO = userRepository.findByEmail(email);
+        //.orElseThrow(
+          //      () -> new UsernameNotFoundException(email)
+        //);
+        com.personal.diplom.model.User currentUser = currentUserO.get();
+        System.out.println("currentUser "+currentUser.getName());
+        UserLoginResponse userLoginResponse = new UserLoginResponse();
+        userLoginResponse.setEmail(currentUser.getEmail());
+        userLoginResponse.setName(currentUser.getName());
+        userLoginResponse.setModeration(currentUser.getIsModerator() == 1 );
+        userLoginResponse.setId(currentUser.getId());
+
+        LoginResponse loginResponse = new LoginResponse();
+        loginResponse.setResult(true);
+        loginResponse.setUserLoginResponse(userLoginResponse);
+        return loginResponse;
+    }
 }

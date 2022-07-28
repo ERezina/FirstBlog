@@ -54,7 +54,8 @@ public class SequrityUser implements UserDetails {
 
     public static UserDetails fromUser(User user){
         return new org.springframework.security.core.userdetails.User(
-                user.getName(),
+           //     user.getName(),
+                user.getEmail(),
                 user.getPassword(),
                 true,true,true,true,user.getRole().getAuthority()
         );

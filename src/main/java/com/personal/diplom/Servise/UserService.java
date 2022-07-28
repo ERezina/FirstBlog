@@ -22,6 +22,15 @@ public class UserService {
     @Autowired
     CaptchaRepository captchaRepository;
 
+    public long getUserId(String email){
+        Optional<com.personal.diplom.model.User> currentUserO = userRepository.findByEmail(email);
+        //.orElseThrow(
+        //      () -> new UsernameNotFoundException(email)
+        //);
+        com.personal.diplom.model.User currentUser = currentUserO.get();
+        return currentUser.getId();
+    }
+
     public UserPostResponse getUserPostResponse(int id){
 
         Optional<User> optionalUser = userRepository.findById(id);

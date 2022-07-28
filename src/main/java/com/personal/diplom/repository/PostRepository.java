@@ -30,8 +30,18 @@ public interface PostRepository extends PagingAndSortingRepository<Post,Integer>
             nativeQuery = true)
     Page<Post> findSearchPostPagination(Pageable pageable, @Param("query") String query);
 
+    @Query(value = "SELECT * FROM posts WHERE  user_id = :idUser AND date <= sysdate() " +
+            "and ( (:status = 'inactive' and is_active = 0)" +
+            " or( :status = 'pending' and is_active = 1 and moderation_status = 'NEW') " +
+            " or (:status = 'declined' and is_active = 1 and moderation_status = 'DECLINED' )" +
+            " or (:status = 'published' and is_active = 1 and moderation_status = 'ACCEPTED'))",
+            countQuery = "SELECT count(*) FROM posts"+
+                    " WHERE user_id = :idUser  AND date <= sysdate()  ",
+            nativeQuery = true)
+    Page<Post> findSearchPostUserPagination(Pageable pageable, @Param("status") String status, @Param("idUser") long idUser);
 
-      @Query(value = "SELECT p " +
+
+    @Query(value = "SELECT p " +
             "FROM Post p "      +
               "LEFT JOIN p.postVotesCollection pvl  "+
               "WHERE p.isActive = 1  " +

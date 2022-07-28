@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 public class LoginResponse {
-    private Boolean result;
+    private boolean result;
     @JsonProperty("user")
     private UserLoginResponse userLoginResponse;
 

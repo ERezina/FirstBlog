@@ -239,3 +239,15 @@ databaseChangeLog:
                 relativeToChangelogFile: true
                 splitStatements: true
                 stripComments: true
+- changeSet:
+    id: 125-add-test-data-comment
+    author: kat (generated)
+    changes:
+      - sqlFile:
+          dbms: mysql
+          encoding:  utf8
+          endDelimiter: \n/\s*\n|\n/\s*$
+          path: 125-add-test-data-comment.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
