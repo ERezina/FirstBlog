@@ -72,13 +72,19 @@ public class PostSearchServise {
         Pageable elem = PageRequest.of(offset,limit);
         Page<Post> allProductsSortedByName;
         elem  = PageRequest.of(offset,limit,Sort.by("date").descending());
-        allProductsSortedByName = postRepository.findSearchPostUserPagination(elem,status,idUser);
-
-        ArrayList<PostResponse> postResponses = new ArrayList<PostResponse>();
-        PostResponseWork postResponseWork = new PostResponseWork();
-        for(Post post: allProductsSortedByName.getContent()){
-            postResponses.add(postResponseWork.copyToPostResponse(post));
+        System.out.println("status "+status + " iduser "+idUser);
+        try {
+            allProductsSortedByName = postRepository.findSearchPostUserPagination(elem, status, idUser);
+            ArrayList<PostResponse> postResponses = new ArrayList<PostResponse>();
+            PostResponseWork postResponseWork = new PostResponseWork();
+            for(Post post: allProductsSortedByName.getContent()){
+                postResponses.add(postResponseWork.copyToPostResponse(post));
+            }
+            return postResponses;
+        }catch(Exception e){
+            System.out.println("dgsfghdkjfsdjkfdsk");
         }
-        return postResponses;
+
+return null;
     }
 }

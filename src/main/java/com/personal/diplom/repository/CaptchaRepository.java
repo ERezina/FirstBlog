@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CaptchaRepository extends CrudRepository<CaptchaCode,Integer>{
@@ -20,4 +21,6 @@ public interface CaptchaRepository extends CrudRepository<CaptchaCode,Integer>{
     void deleteCaptchaCode(@Param("date") Date date);
 
     List<CaptchaCode> findBySecretCode(String secret_code);
+
+   Optional<CaptchaCode> findFirstBySecretCode(String secret_code);
 }

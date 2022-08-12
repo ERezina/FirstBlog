@@ -3,7 +3,7 @@ CREATE TABLE posts (
   date datetime(6) NOT NULL,
   is_active int NOT NULL,
   moderation_status enum('NEW','ACCEPTED','DECLINED') NOT NULL,
-  text varchar(255) NOT NULL,
+  text_text TEXT NOT NULL,
   title varchar(255) NOT NULL,
   view_count int NOT NULL,
   moderator_id int,

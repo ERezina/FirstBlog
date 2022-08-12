@@ -20,7 +20,6 @@ public class PostResponseWork {
         String annonse;
         postResponse = new PostResponse();
         postResponse.setId(post.getId());
-        System.out.println("Дата в строке "+post.getDate().toString().substring(0,10));
         LocalDate localD =  LocalDate.parse(post.getDate().toString().substring(0,10));
         LocalTime time = LocalTime.parse("00:00:00");
         ZoneOffset zone = ZoneOffset.of("Z");

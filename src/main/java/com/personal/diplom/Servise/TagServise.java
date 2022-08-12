@@ -37,7 +37,6 @@ public class TagServise {
                 countTag++;
 
                 TagsWeightResponse tagsWeightResponse = new TagsWeightResponse();
-                System.out.println("ob "+co.getName()+ " dWeight "+co.getWeight());
                 dWeight = co.getWeight()/countPost;
                 if (countTag == 1){ //у самого часто встречающегося найдём коэф к
                     k = 1/dWeight;
@@ -47,7 +46,6 @@ public class TagServise {
                 }
                 tagsWeightResponse.setWeight(dWeight);
                 tagsWeightResponse.setName(co.getName());
-                System.out.println("ob "+co.getName()+ " dWeight "+dWeight);
                 tagsResponse.addTag(tagsWeightResponse);
             }
         } catch (Exception ex){

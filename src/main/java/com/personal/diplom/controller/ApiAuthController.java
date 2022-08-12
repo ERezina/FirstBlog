@@ -2,10 +2,12 @@ package com.personal.diplom.controller;
 
 import com.personal.diplom.Servise.CaptchaService;
 import com.personal.diplom.Servise.UserService;
+import com.personal.diplom.api.request.PasswordRequest;
 import com.personal.diplom.api.request.UserRegisterRequest;
 import com.personal.diplom.api.response.*;
 import com.personal.diplom.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,6 +29,8 @@ public class ApiAuthController {
 
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
+    @Value("${upload.path}")
+    private String uploadPath;
 
     @Autowired
     public ApiAuthController(CaptchaService captchaService, UserService userService, AuthenticationManager authenticationManager, UserRepository userRepository) {
@@ -83,13 +87,16 @@ public class ApiAuthController {
     }
 
     @RequestMapping(value = "/api/auth/password" , method = RequestMethod.POST)
-    public int changePassword(){
-        return 7;
+    public ResponseEntity<ResponseResult> changePassword(@RequestBody PasswordRequest passwordRequest){
+
+        return ResponseEntity.ok(captchaService.changePassword(passwordRequest));
     }
 
     @RequestMapping(value = "/api/auth/logout" , method = RequestMethod.GET)
     public ResponseEntity<ResponseResult> logout(){
-        return ResponseEntity.ok(new ResponseResult(true));
+        ResponseResult responseResult = new ResponseResult();
+        responseResult.setResult(true);
+        return ResponseEntity.ok(responseResult);
     }
 
 
@@ -105,7 +112,7 @@ public class ApiAuthController {
         userLoginResponse.setName(currentUser.getName());
         userLoginResponse.setModeration(currentUser.getIsModerator() == 1 );
         userLoginResponse.setId(currentUser.getId());
-
+        userLoginResponse.setPhoto(uploadPath + "/"+currentUser.getPhoto());
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setResult(true);
         loginResponse.setUserLoginResponse(userLoginResponse);

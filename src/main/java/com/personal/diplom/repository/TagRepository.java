@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 
 import java.util.Collection;
+import java.util.Optional;
 
 @Repository
 public interface TagRepository extends CrudRepository<Tag,Integer> {
@@ -25,5 +26,5 @@ public interface TagRepository extends CrudRepository<Tag,Integer> {
             nativeQuery  = true)
     Collection<CountTags> findTags(@Param("startname") String startname);
 
-
+    Optional<Tag> findFirstByName(String name);
 }

@@ -1,12 +1,13 @@
 package com.personal.diplom.Servise;
 
+import com.personal.diplom.Servise.util.CheckData;
 import com.personal.diplom.Servise.util.PostResponseWork;
+import com.personal.diplom.api.request.AddPostRequest;
 import com.personal.diplom.api.response.*;
-import com.personal.diplom.model.Post;
-import com.personal.diplom.model.PostComment;
-import com.personal.diplom.model.Tag;
-import com.personal.diplom.model.User;
+import com.personal.diplom.model.*;
 import com.personal.diplom.repository.PostRepository;
+import com.personal.diplom.repository.TagRepository;
+import org.glassfish.jaxb.core.util.Which;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,10 +19,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class PostServise {
@@ -29,6 +33,8 @@ public class PostServise {
     private PostRepository postRepository;
     @Autowired
     private UserService userService;
+    @Autowired
+    private TagRepository tagRepository;
 
     private ArrayList<PostResponse> getAllPosts(int offset,int limit, String mode ){
         if(mode == null){mode = "recent"; }
@@ -119,6 +125,89 @@ public class PostServise {
         }
         postRepository.save(post);
         return new ResponseEntity(postIdResponse,HttpStatus.OK);
+    }
+
+    private void addTags(Post post, List<String> tagSet){
+        for (String items : tagSet) {
+            System.out.println("addTags 1");
+            Tag tag = tagRepository.findFirstByName(items).orElse(new Tag(items));
+            tagRepository.save(tag);
+            post.addTag(tag);
+            tag.addPost(post);
+            tagRepository.save(tag);
+            postRepository.save(post);
+
+        }
+    }
+    public  ResponseResult addPost(AddPostRequest addPostRequest, Principal principal){
+        ResponseResult responseResult = CheckData.CheckPost(addPostRequest);
+        if (responseResult.getResult()) {
+            Post post = new Post();
+            //   System.out.println( new Date( localD.toEpochSecond(time, zone)));
+            Date nowDate = new Date();
+            Date userDate = new Date((long) addPostRequest.getTimestamp() * 1000);
+            if (nowDate.after(userDate)) {
+                userDate = nowDate;
+            }
+
+            post.setDate(userDate);
+
+            post.setTitle(addPostRequest.getTitle());
+            post.setText(addPostRequest.getText());
+            post.setModerationStatus(ModerationStatusType.NEW);
+            post.setIsActive(addPostRequest.getActive());
+            post.setViewCount(0);
+            post.setUser(userService.getUser(principal.getName()));
+            postRepository.save(post);
+
+            addTags(post,addPostRequest.getTags());
+
+          responseResult.setResult(true);
+        }
+        return responseResult;
+    }
+
+
+    public  ResponseResult editPost(int idPost,AddPostRequest addPostRequest, Principal principal){
+        ResponseResult responseResult = CheckData.CheckPost(addPostRequest);
+        System.out.println("responseResult.getResult() "+responseResult.getResult().toString());
+
+        if (responseResult.getResult()) {
+            System.out.println("result = true");
+            Post post = postRepository.findById(idPost).orElseThrow(() -> new NullPointerException());
+            //   System.out.println( new Date( localD.toEpochSecond(time, zone)));
+            Date nowDate = new Date();
+            Date userDate = new Date((long) addPostRequest.getTimestamp() * 1000);
+            if (nowDate.after(userDate)) {
+                userDate = nowDate;
+            }
+            post.setDate(userDate);
+            post.setTitle(addPostRequest.getTitle());
+            post.setText(addPostRequest.getText());
+            post.setModerationStatus(ModerationStatusType.NEW);
+            post.setIsActive(addPostRequest.getActive());
+            User user = userService.getUser(principal.getName());
+            if (post.getUser().getId() == user.getId()) {
+                post.setModerationStatus(ModerationStatusType.NEW);
+            }
+            postRepository.save(post);
+
+            List<String> tagList = post.getPostTags().stream().map( p -> p.getName()).collect(Collectors.toList());
+            //удалим все теги
+            for (String items : tagList) {
+                Optional<Tag> optag = tagRepository.findFirstByName(items);
+                if (optag.isPresent()){
+                    Tag tag = optag.get();
+                    tag.removePost(post);
+                    tagRepository.save(tag);
+                    postRepository.save(post);
+                }
+
+            }
+            addTags(post,addPostRequest.getTags());
+            responseResult.setResult(true);
+        }
+        return responseResult;
     }
 
 }

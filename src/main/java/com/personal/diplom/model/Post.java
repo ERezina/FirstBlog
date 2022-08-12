@@ -3,9 +3,7 @@ package com.personal.diplom.model;
 //import main.ModerationStatusType;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name ="posts")
@@ -35,7 +33,7 @@ public class Post {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
+    @Column(name = "text_text",columnDefinition="TEXT", nullable = false)
     private String text;
 
     @Column(name = "view_count",nullable = false)
@@ -54,7 +52,7 @@ public class Post {
             name = "tag2post",
             joinColumns = @JoinColumn(name = "post_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
-    private List<Tag> postTags;
+    private Set<Tag> postTags = new HashSet<Tag>();
 
 //    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
   //  private Collection<TagPost> tagPostCollection;
@@ -157,6 +155,9 @@ public class Post {
         return postVotesCollection;
     }
 
+    public void addComment(PostComment postComment){
+        this.getCommentCollection().add(postComment);
+    }
     public long getCountLike() {
         return postVotesCollection.stream().filter(vote->vote.getValue() == 1).count();
     }
@@ -169,11 +170,29 @@ public class Post {
         this.postVotesCollection = postVotesCollection;
     }
 
-    public List<Tag> getPostTags() {
+    public Set<Tag> getPostTags() {
+
         return postTags;
     }
 
-    public void setPostTags(List<Tag> postTags) {
+    public void setPostTags(Set<Tag> postTags) {
         this.postTags = postTags;
+    }
+
+    public void addTag(Tag tag){
+        this.postTags.add(tag);
+    }
+
+    public void delTag(Tag tag){
+        this.postTags.remove(tag);
+    }
+
+    public void delAllTag(){
+        this.postTags.removeAll(postTags);
+    }
+
+    public void removeTag( Tag tag) {
+        this.postTags.remove(tag);
+        tag.getPostList().remove(this);
     }
 }

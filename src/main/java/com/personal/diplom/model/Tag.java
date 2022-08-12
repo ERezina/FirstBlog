@@ -1,10 +1,16 @@
 package com.personal.diplom.model;
 
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name="tags")
+@NoArgsConstructor
 public class Tag {
 
     @Id
@@ -15,7 +21,11 @@ public class Tag {
     private String name;
 
     @ManyToMany(mappedBy = "postTags")
-    private List<Post> postList;
+    private Set<Post> postList = new HashSet<Post>() ;
+
+    public Tag(String name) {
+        this.name = name;
+    }
 
     public int getId() {
         return id;
@@ -31,5 +41,23 @@ public class Tag {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Set<Post> getPostList(){
+
+        return postList ;
+    }
+    public void addPost(Post post){
+        postList.add(post);
+    }
+
+    public void removePost( Post post) {
+        System.out.println("Удаляем в Тэгах");
+        this.postList.remove(post);
+        post.getPostTags().remove(this);
+     }
+
+  public  void delAllPost(){
+        postList.removeAll(postList) ;
     }
 }

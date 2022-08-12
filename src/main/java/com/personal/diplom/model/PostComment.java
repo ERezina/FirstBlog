@@ -14,9 +14,9 @@ public class PostComment {
     @ManyToOne(cascade = CascadeType.ALL)
     private PostComment parent;
 
-  //  @JoinColumn(name="post_id",nullable = false)
- //   @ManyToOne(cascade = CascadeType.ALL)
- //   private Post post;
+     @JoinColumn(name="post_id",nullable = false)
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Post post;
 
     @JoinColumn(name="user_id",nullable = false)
     @ManyToOne(cascade = CascadeType.ALL)
@@ -44,13 +44,13 @@ public class PostComment {
         this.parent = parent;
     }
 
-  //  public Post getPostId() {
- //       return post;
-  //  }
+    public Post getPost() {
+        return post;
+    }
 
- //   public void setPostId(Post post) {
- //       this.post = post;
-  //  }
+    public void setPost(Post post) {
+        this.post = post;
+    }
 
     public User getUser() {
         return user;

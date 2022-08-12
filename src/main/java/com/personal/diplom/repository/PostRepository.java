@@ -1,6 +1,7 @@
 package com.personal.diplom.repository;
 
 import com.personal.diplom.model.Post;
+import com.personal.diplom.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -11,7 +12,9 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PostRepository extends PagingAndSortingRepository<Post,Integer> {
@@ -35,9 +38,7 @@ public interface PostRepository extends PagingAndSortingRepository<Post,Integer>
             " or( :status = 'pending' and is_active = 1 and moderation_status = 'NEW') " +
             " or (:status = 'declined' and is_active = 1 and moderation_status = 'DECLINED' )" +
             " or (:status = 'published' and is_active = 1 and moderation_status = 'ACCEPTED'))",
-            countQuery = "SELECT count(*) FROM posts"+
-                    " WHERE user_id = :idUser  AND date <= sysdate()  ",
-            nativeQuery = true)
+             nativeQuery = true)
     Page<Post> findSearchPostUserPagination(Pageable pageable, @Param("status") String status, @Param("idUser") long idUser);
 
 
@@ -93,6 +94,20 @@ public interface PostRepository extends PagingAndSortingRepository<Post,Integer>
             "AND moderation_status = 'ACCEPTED' " +
             "AND date <= sysdate() ",
              nativeQuery = true)
-    Post findPostById(@Param("query") int query);
+    Post findPostByIdNew(@Param("query") int query);
 
+    @Query(value = "SELECT count(p) FROM Post p "+
+            "WHERE :user is null or p.user = :user  "
+    )
+    Integer countPostUser(@Param("user") User user);
+
+    @Query(value = "SELECT min(p.date) FROM Post p "+
+            "WHERE :user is null or p.user = :user  "
+    )
+    Optional<Date> firstPost(@Param("user")User user);
+
+    @Query(value = "SELECT sum(p.viewCount) FROM Post p "+
+            "WHERE :user is null or p.user = :user  "
+    )
+    Optional<Integer> viewCount(@Param("user")User user);
 }

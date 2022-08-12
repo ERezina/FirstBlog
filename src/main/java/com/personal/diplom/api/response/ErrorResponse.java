@@ -5,10 +5,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class ResponseResult {
-    private Boolean result;
-    private ErrorResponse errorResponse;
-    private int id;
+public class ErrorResponse {
+    String title;
+    String text;
+    String password;
+    String code;
+    String captcha;
 }

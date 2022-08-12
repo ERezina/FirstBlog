@@ -1,7 +1,11 @@
 package com.personal.diplom.controller;
 
 import com.personal.diplom.Servise.*;
+import com.personal.diplom.api.request.AddPostRequest;
+import com.personal.diplom.api.request.CommentRequest;
+import com.personal.diplom.api.request.VotesRequest;
 import com.personal.diplom.api.response.PostsCountResponse;
+import com.personal.diplom.api.response.ResponseResult;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -16,19 +20,44 @@ public class ApiPostController {
     private final PostSearchByDateServise postSearchByDateServise;
     private final PostSearchByTagService postSearchByTagService;
     private final UserService userService;
+    private final CommentService commentService;
+    private final LikeService likeService;
 
-    public ApiPostController(PostServise postServise, PostSearchServise postSearchServise, PostSearchByDateServise postSearchByDateServise, PostSearchByTagService postSearchByTagService, UserService userService) {
+    public ApiPostController(PostServise postServise, PostSearchServise postSearchServise, PostSearchByDateServise postSearchByDateServise, PostSearchByTagService postSearchByTagService, UserService userService, CommentService commentService, LikeService likeService) {
         this.postServise = postServise;
         this.postSearchServise = postSearchServise;
         this.postSearchByDateServise = postSearchByDateServise;
         this.postSearchByTagService = postSearchByTagService;
         this.userService = userService;
+        this.commentService = commentService;
+        this.likeService = likeService;
     }
 
     @RequestMapping(value = "/api/post", method = RequestMethod.GET)
     public PostsCountResponse setPost(@RequestParam("offset") int offset,@RequestParam("limit") int limit, @RequestParam("mode") String mode){
     //    PostsCountResponse postsCountResponse = new PostsCountResponse();
         return postServise.getPostsCount(offset,limit, mode);
+    }
+
+    @RequestMapping(value = "/api/post", method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('user:write')")
+    public ResponseEntity<ResponseResult> setPost(@RequestBody AddPostRequest addPostRequest
+                                                ,Principal principal){
+        if (principal == null){
+            return ResponseEntity.ok(new ResponseResult());
+        }
+         return ResponseEntity.ok(postServise.addPost(addPostRequest, principal));
+    }
+
+    @RequestMapping(value = "/api/comment", method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('user:write')")
+    public ResponseEntity<ResponseResult> addCommentToPost(@RequestBody CommentRequest commentRequest
+            ,Principal principal){
+        if (principal == null){
+            return ResponseEntity.ok(new ResponseResult());
+        }
+        return ResponseEntity.ok(commentService.addComment(commentRequest, principal));
+
     }
 
     @RequestMapping(value = "/api/post/search", method = RequestMethod.GET)
@@ -55,6 +84,14 @@ public class ApiPostController {
         return postServise.getPostById(Integer.valueOf(id));
     }
 
+    @RequestMapping(value = "/api/post/{ID}", method = RequestMethod.PUT)
+    public ResponseEntity<ResponseResult> postEdit(@PathVariable("ID") int id
+                                ,@RequestBody AddPostRequest addPostRequest
+                                ,Principal principal){
+        ResponseResult responseResult = new ResponseResult();
+        responseResult = postServise.editPost(id,addPostRequest,principal);
+        return ResponseEntity.ok(responseResult);
+    }
     @RequestMapping(value = "/api/post/moderation", method = RequestMethod.GET)
     public int postListModeration(){
         return 45;
@@ -69,18 +106,22 @@ public class ApiPostController {
         if (principal == null){
             return ResponseEntity.ok(new PostsCountResponse());
         }
-        System.out.println("NAME "+userService.getUserId(principal.getName()));
         return ResponseEntity.ok(postSearchServise.getPostsUser(offset,limit,status,userService.getUserId(principal.getName())));
     }
 
     @RequestMapping(value = "/api/post/like", method = RequestMethod.POST)
-    public int postLike(){
-        return 47;
+    @PreAuthorize("hasAuthority('user:write')")
+    public ResponseEntity<ResponseResult> postLike(@RequestBody VotesRequest votesRequest, Principal principal){
+
+        return ResponseEntity.ok(likeService.addLike(votesRequest.getPost_id(),principal,1));
     }
 
+
+
     @RequestMapping(value = "/api/post/dislike", method = RequestMethod.POST)
-    public int postDislike(){
-        return 48;
+    @PreAuthorize("hasAuthority('user:write')")
+    public ResponseEntity<ResponseResult> postDislike(@RequestBody VotesRequest votesRequest, Principal principal){
+        return ResponseEntity.ok(likeService.addLike(votesRequest.getPost_id(),principal,-1));
     }
 
 }

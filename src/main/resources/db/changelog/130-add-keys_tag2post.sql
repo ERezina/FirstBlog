@@ -1,0 +1,6 @@
+ALTER TABLE tag2post
+ADD FOREIGN KEY (post_id) REFERENCES posts(ID)
+/
+ALTER TABLE tag2post
+ADD FOREIGN KEY (tag_id) REFERENCES tags(ID)
+/

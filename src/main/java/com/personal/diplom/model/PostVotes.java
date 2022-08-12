@@ -17,6 +17,9 @@ public class PostVotes {
     @Column(nullable = false)
     private Date time;
 
+    @JoinColumn(name="post_id",nullable = false)
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Post post;
 
     private int value_votes;
 
@@ -44,13 +47,13 @@ public class PostVotes {
         this.user = user;
     }
 
-  //  public Post getPost() {
- //       return post;
-//    }
+    public Post getPost() {
+        return post;
+    }
 
- //   public void setPost(Post post) {
- //       this.post = post;
-//    }
+    public void setPost(Post post) {
+        this.post = post;
+    }
 
     public Date getTime() {
         return time;

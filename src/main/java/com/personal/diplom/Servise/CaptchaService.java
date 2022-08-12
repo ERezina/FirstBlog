@@ -2,7 +2,10 @@ package com.personal.diplom.Servise;
 
 import com.github.cage.Cage;
 import com.github.cage.GCage;
+import com.personal.diplom.api.request.PasswordRequest;
 import com.personal.diplom.api.response.CaptchaResponse;
+import com.personal.diplom.api.response.ErrorResponse;
+import com.personal.diplom.api.response.ResponseResult;
 import com.personal.diplom.model.CaptchaCode;
 import com.personal.diplom.repository.CaptchaRepository;
 import liquibase.pro.packaged.S;
@@ -13,10 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Base64;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.*;
 
 @Service
 public class CaptchaService {
@@ -60,5 +60,35 @@ public class CaptchaService {
        return captchaResponse;
     }
 
+    public ResponseResult changePassword(PasswordRequest passwordRequest){
+        ResponseResult responseResult = new ResponseResult();
+        ErrorResponse errorResponse = new ErrorResponse();
+        if (passwordRequest.getPassword().length() < 6){
+            responseResult.setResult(false);
+            errorResponse.setPassword("Пароль короче 6-ти символов");
+            responseResult.setErrorResponse(errorResponse);
+            return responseResult;
+        }
+        Optional<CaptchaCode> captchaCodeOptional = Optional.of(
+                captchaRepository.findFirstBySecretCode(passwordRequest.getCaptcha_secret())
+                        .orElse(new CaptchaCode()));
 
+        CaptchaCode captchaCode = captchaCodeOptional.get();
+        if (captchaCode.getId() == 0) {
+            errorResponse.setCode("\"Ссылка для восстановления пароля устарела.\n" +
+                    " <a href=\n" +
+                    " \\\"/auth/restore\\\">Запросить ссылку снова</a>");
+            responseResult.setResult(false);
+            responseResult.setErrorResponse(errorResponse);
+            return responseResult;
+        }
+        if (captchaCode.getCode() == passwordRequest.getCaptcha()){
+            responseResult.setResult(true);
+        }else {
+            errorResponse.setCaptcha("Код с картинки введён неверно");
+            responseResult.setResult(false);
+            responseResult.setErrorResponse(errorResponse);
+        }
+        return responseResult;
+    }
 }

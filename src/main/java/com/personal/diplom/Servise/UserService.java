@@ -1,18 +1,24 @@
 package com.personal.diplom.Servise;
 
-import com.personal.diplom.api.response.UserCheckResponse;
-import com.personal.diplom.api.response.UserPostResponse;
-import com.personal.diplom.api.response.UserRegisterResponse;
+import com.personal.diplom.api.request.ProfilRequest;
+import com.personal.diplom.api.request.ProfilRequestJSON;
+import com.personal.diplom.api.response.*;
 import com.personal.diplom.model.CaptchaCode;
 import com.personal.diplom.model.User;
 import com.personal.diplom.repository.CaptchaRepository;
 import com.personal.diplom.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.IOException;
+import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -22,6 +28,12 @@ public class UserService {
     @Autowired
     CaptchaRepository captchaRepository;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+    @Value("${upload.path}")
+    private String uploadPath;
+
     public long getUserId(String email){
         Optional<com.personal.diplom.model.User> currentUserO = userRepository.findByEmail(email);
         //.orElseThrow(
@@ -29,6 +41,14 @@ public class UserService {
         //);
         com.personal.diplom.model.User currentUser = currentUserO.get();
         return currentUser.getId();
+    }
+
+    public com.personal.diplom.model.User getUser(String email){
+        Optional<com.personal.diplom.model.User> currentUserO = userRepository.findByEmail(email);
+        //.orElseThrow(
+        //      () -> new UsernameNotFoundException(email)
+        //);
+        return currentUserO.get();
     }
 
     public UserPostResponse getUserPostResponse(int id){
@@ -102,5 +122,71 @@ public class UserService {
             userRegisterResponse.setErrors(userCheckResponse);
         }
            return userRegisterResponse;
+    }
+
+    public ResponseResult editProfile(ProfilRequest profilRequest, Principal principal) throws IOException {
+        ResponseResult responseResult = new ResponseResult();
+        ErrorResponse errorResponse = new ErrorResponse();
+        User user = userRepository.findByEmail(principal.getName()).get();
+        user.setEmail(profilRequest.getEmail());
+        user.setName(profilRequest.getName());
+
+        if((!profilRequest.getPhoto().isEmpty())&(profilRequest.getRemovePhoto() == 0)){
+            System.out.println("ФОТО НЕ ПУСТОЕ!!!!");
+            File uploadDir = new File(uploadPath);
+            if (!uploadDir.exists()){
+                uploadDir.mkdir();
+            }
+            String uuidFile = UUID.randomUUID().toString();
+            String resultFileName = uuidFile+"."+profilRequest.getPhoto().getOriginalFilename();
+            profilRequest.getPhoto().transferTo(new File(uploadPath + "/"+resultFileName));
+            user.setPhoto(uploadPath + "/"+resultFileName);
+        }
+        if (profilRequest.getPassword() != null){
+            if (profilRequest.getPassword().length() < 6){
+                errorResponse.setPassword("Пароль короче 6-и символов");
+                responseResult.setErrorResponse(errorResponse);
+                responseResult.setResult(false);
+                return responseResult;
+            }
+            else{
+                user.setPassword(passwordEncoder.encode(profilRequest.getPassword()));
+            }
+        }
+        userRepository.save(user);
+        responseResult.setResult(true);
+        return responseResult;
+    }
+
+    public ResponseResult editProfileJSON(ProfilRequestJSON profilRequest, Principal principal) throws IOException {
+        ResponseResult responseResult = new ResponseResult();
+        ErrorResponse errorResponse = new ErrorResponse();
+        User user = userRepository.findByEmail(principal.getName()).get();
+        user.setEmail(profilRequest.getEmail());
+        user.setName(profilRequest.getName());
+
+        if (profilRequest.getPassword() != null ){
+            if (profilRequest.getPassword().length() < 6){
+                errorResponse.setPassword("Пароль короче 6-и символов");
+                responseResult.setErrorResponse(errorResponse);
+                responseResult.setResult(false);
+                return responseResult;
+            }
+            else{
+                user.setPassword(passwordEncoder.encode(profilRequest.getPassword()));
+            }
+        }
+        if (profilRequest.getRemovePhoto() != null) {
+            if (profilRequest.getRemovePhoto() == 1) {
+                File delFile = new File(user.getPhoto());
+                if (delFile.exists()) {
+                    delFile.delete();
+                }
+                user.setPhoto("");
+            }
+        }
+        userRepository.save(user);
+        responseResult.setResult(true);
+        return responseResult;
     }
 }

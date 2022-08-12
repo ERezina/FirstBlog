@@ -251,3 +251,15 @@ databaseChangeLog:
           relativeToChangelogFile: true
           splitStatements: true
           stripComments: true
+- changeSet:
+    id: 130-add-keys_tag2post
+    author: kat (generated)
+    changes:
+      - sqlFile:
+          dbms: mysql
+          encoding:  utf8
+          endDelimiter: \n/\s*\n|\n/\s*$
+          path: 130-add-keys_tag2post.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
