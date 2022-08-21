@@ -29,34 +29,39 @@ public class StatService {
     private GlobalSettingsRepository globalSettingsRepository;
 
     public StatResponse getStat(Principal principal ){
+       // StatResponse statResponse = new StatResponse();
+
+        //if (principal == null) {
+         //   return getStatAll(null);
+        //}else {
+         //   User user = userService.getUser(principal.getName());
+          //  if (user.getIsModerator() == 1) {
+               // return getStatAll(null);
+           // }
+          /*  statResponse.setPostsCount(postRepository.countPostUser(user));
+            statResponse.setDislikesCount(votesRepository.countVotes(user, -1));
+            statResponse.setLikesCount(votesRepository.countVotes(user, 1));
+            Optional<Date> dateOptional = postRepository.firstPost(user);
+            Date date;
+            if (!dateOptional.isEmpty()) {
+                date = dateOptional.get();
+                statResponse.setFirstPublication((Long) getNormDate(date));
+            }
+
+            Optional<Integer> countOpt = postRepository.viewCount(user);
+            if (countOpt.isEmpty() == false) {
+                statResponse.setViewsCount(countOpt.get());
+            }*/
+      //  }
+        return getStatAll(null);
+    }
+    public StatResponse getStatAll(User user ){
         StatResponse statResponse = new StatResponse();
-        User user = userService.getUser(principal.getName());
-        if (user.getIsModerator() == 1){
-            return getStatAll();
-        }
+
         statResponse.setPostsCount(postRepository.countPostUser(user));
         statResponse.setDislikesCount(votesRepository.countVotes(user,-1));
         statResponse.setLikesCount(votesRepository.countVotes(user,1));
         Optional<Date> dateOptional = postRepository.firstPost(user);
-        Date date ;
-        if (dateOptional.isEmpty() == false){
-            date = dateOptional.get();
-            statResponse.setFirstPublication((Long)getNormDate(date));
-           }
-
-        Optional<Integer> countOpt = postRepository.viewCount(user);
-        if (countOpt.isEmpty() == false) {
-            statResponse.setViewsCount(countOpt.get());
-        }
-        return statResponse;
-    }
-    public StatResponse getStatAll( ){
-        StatResponse statResponse = new StatResponse();
-
-        statResponse.setPostsCount(postRepository.countPostUser(null));
-        statResponse.setDislikesCount(votesRepository.countVotes(null,-1));
-        statResponse.setLikesCount(votesRepository.countVotes(null,1));
-        Optional<Date> dateOptional = postRepository.firstPost(null);
         Date date ;
         if (dateOptional.isEmpty() == false){
             date = dateOptional.get();

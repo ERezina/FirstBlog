@@ -7,8 +7,9 @@ import com.personal.diplom.api.response.*;
 import com.personal.diplom.model.*;
 import com.personal.diplom.repository.PostRepository;
 import com.personal.diplom.repository.TagRepository;
-import org.glassfish.jaxb.core.util.Which;
-import org.jsoup.Jsoup;
+import com.personal.diplom.repository.UserRepository;
+//import org.glassfish.jaxb.core.util.Which;
+//import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -35,6 +36,8 @@ public class PostServise {
     private UserService userService;
     @Autowired
     private TagRepository tagRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     private ArrayList<PostResponse> getAllPosts(int offset,int limit, String mode ){
         if(mode == null){mode = "recent"; }
@@ -184,7 +187,7 @@ public class PostServise {
             post.setDate(userDate);
             post.setTitle(addPostRequest.getTitle());
             post.setText(addPostRequest.getText());
-            post.setModerationStatus(ModerationStatusType.NEW);
+          //  post.setModerationStatus(ModerationStatusType.NEW);
             post.setIsActive(addPostRequest.getActive());
             User user = userService.getUser(principal.getName());
             if (post.getUser().getId() == user.getId()) {
@@ -208,6 +211,41 @@ public class PostServise {
             responseResult.setResult(true);
         }
         return responseResult;
+    }
+    public PostsCountResponse getListModeration(int offset,int limit, String status ,Principal principal ){
+        PostsCountResponse postsCountResponse = new PostsCountResponse();
+        User user = userRepository.findByEmail(principal.getName()).get();
+
+        try {
+            postsCountResponse.addPost(getAllPosts(offset,limit,status,user));
+            postsCountResponse.setCount(postsCountResponse.getPosts().size());
+        }
+        catch (Exception e){
+
+        }
+
+        return postsCountResponse;
+    }
+
+    private ArrayList<PostResponse> getAllPosts(int offset,int limit, String status,User user ){
+
+        Pageable elem = PageRequest.of(offset,limit);
+        Page<Post> allProductsSortedByName;
+        System.out.println("Модератор "+user.getId());
+        System.out.println("статус "+status.toUpperCase(Locale.ROOT));
+        allProductsSortedByName = postRepository.findAllPostPaginationModerator(
+                elem,
+                status.toUpperCase(Locale.ROOT),
+                user.getId()
+        );
+
+
+        ArrayList<PostResponse> postResponses = new ArrayList<PostResponse>();
+        PostResponseWork postResponseWork = new PostResponseWork();
+        for(Post post: allProductsSortedByName.getContent()){
+            postResponses.add(postResponseWork.copyToPostResponse(post));
+        }
+        return postResponses;
     }
 
 }

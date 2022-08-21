@@ -67,14 +67,18 @@ public class ApiPostController {
     }
 
     @RequestMapping(value = "/api/post/byDate", method = RequestMethod.GET)
-    public PostsCountResponse postSearchByDate(@RequestParam("offset") int offset,@RequestParam("limit") int limit, @RequestParam(value = "date",required = false) String query){
+    public PostsCountResponse postSearchByDate(@RequestParam("offset") int offset,
+                                               @RequestParam("limit") int limit,
+                                               @RequestParam(value = "date",required = false) String query){
         return postSearchByDateServise.getPostsCount(offset,limit,query);
     }
 
     @RequestMapping(value = "/api/post/byTag", method = RequestMethod.GET)
-    public PostsCountResponse postSearchByTag(@RequestParam("offset") int offset,@RequestParam("limit") int limit, @RequestParam(value = "tag",required = false) String tag){
+    public PostsCountResponse postSearchByTag(@RequestParam("offset") int offset,
+                                              @RequestParam("limit") int limit,
+                                              @RequestParam(value = "tag",required = false) String tag){
 
-        return postSearchByTagService.getPostsCount(offset,limit,tag);
+        return postSearchByTagService.getPostsCountByTag(offset,limit,tag);
     }
 
 
@@ -93,8 +97,11 @@ public class ApiPostController {
         return ResponseEntity.ok(responseResult);
     }
     @RequestMapping(value = "/api/post/moderation", method = RequestMethod.GET)
-    public int postListModeration(){
-        return 45;
+    public ResponseEntity<PostsCountResponse> getListModeration(@RequestParam("offset") int offset
+                                    ,@RequestParam("limit") int limit
+                                    ,@RequestParam("status") String status
+                                    , Principal principal){
+        return ResponseEntity.ok(postServise.getListModeration(offset,limit,status,principal));
     }
 
     @RequestMapping(value = "/api/post/my", method = RequestMethod.GET)

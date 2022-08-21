@@ -1,16 +1,21 @@
 package com.personal.diplom.controller;
 
 import com.personal.diplom.Servise.*;
+import com.personal.diplom.api.request.PostModerationRequest;
 import com.personal.diplom.api.request.ProfilRequest;
 import com.personal.diplom.api.request.ProfilRequestJSON;
+import com.personal.diplom.api.request.SettingsRequest;
 import com.personal.diplom.api.response.*;
-import org.springframework.beans.factory.annotation.Value;
+import com.personal.diplom.model.GlobalSettings;
+import com.personal.diplom.model.User;
+import com.personal.diplom.repository.GlobalSettingsRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.security.Principal;
 
@@ -23,15 +28,18 @@ public class ApiGeneralController {
     private final CalendarServise calendarServise;
     private final StatService statService;
     private final UserService userService;
+    private final ModerationServise moderationServise;
+    private final GlobalSettingsRepository globalSettingsRepository;
 
-
-    public ApiGeneralController(SettingsServise settingsServise, InitResponse initResponse, TagServise tagServise, CalendarServise calendarServise, StatService statService, UserService userService){
+    public ApiGeneralController(SettingsServise settingsServise, InitResponse initResponse, TagServise tagServise, CalendarServise calendarServise, StatService statService, UserService userService, ModerationServise moderationServise, GlobalSettingsRepository globalSettingsRepository){
         this.settingsServise = settingsServise;
         this.initResponse = initResponse;
         this.tagServise = tagServise;
         this.calendarServise = calendarServise;
         this.statService = statService;
         this.userService = userService;
+        this.moderationServise = moderationServise;
+        this.globalSettingsRepository = globalSettingsRepository;
     }
 
     @RequestMapping(value = "/api/init", method = RequestMethod.GET)
@@ -64,25 +72,21 @@ public class ApiGeneralController {
 
 
     @RequestMapping(value = "/api/moderation", method = RequestMethod.POST)
-    public int postModeration(){
-        return 235;
+    public ResponseEntity<ResponseResult> postModeration
+            (@RequestBody PostModerationRequest postModerationRequest){
+
+        return ResponseEntity.ok(moderationServise.setModerationStatus(postModerationRequest));
     }
 
- /*   @RequestMapping(value = "/api/profile/my", method = RequestMethod.POST,
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("hasAuthority('user:write')")
-    public ResponseEntity<ResponseResult> editProfile(
-                                    @RequestBody ProfilRequest profilRequest,
-                                    Principal principal) {
-        return ResponseEntity.ok(userService.editProfile(profilRequest,principal));
-    }*/
+
  @RequestMapping(value = "/api/profile/my", method = RequestMethod.POST,
          consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
  @PreAuthorize("hasAuthority('user:write')")
  public ResponseEntity<ResponseResult> editProfile(
          @ModelAttribute ProfilRequest profilRequest,
+         HttpServletRequest request,
          Principal principal) throws IOException {
-     return ResponseEntity.ok(userService.editProfile(profilRequest,principal));
+     return ResponseEntity.ok(userService.editProfile(profilRequest,request,principal));
  }
 
     @RequestMapping(value = "/api/profile/my", method = RequestMethod.POST,
@@ -97,25 +101,24 @@ public class ApiGeneralController {
     @RequestMapping(value = "/api/statistics/my", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('user:write')")
     public ResponseEntity<StatResponse> myStatistics(Principal principal){
-        return ResponseEntity.ok(statService.getStat(principal));
+        User user = userService.getUser(principal.getName());
+        return ResponseEntity.ok(statService.getStatAll(user));
     }
 
     @RequestMapping(value = "/api/statistics/all", method = RequestMethod.GET)
-    @PreAuthorize("hasAuthority('user:write')")
     public ResponseEntity<StatResponse> allStatistics(Principal principal){
-
+        GlobalSettings globalSettings = globalSettingsRepository.findByCode("STATISTICS_IS_PUBLIC");
+        if ((principal == null)&(!globalSettings.getValue().equals("YES"))) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new StatResponse());
+        }
         return ResponseEntity.ok(statService.getStat(principal));
     }
 
-
-    /*  @RequestMapping(value = "/api/statistics/all", method = RequestMethod.GET)
-    public ResponseEntity<StatResponse> allStatisticsForAll(){
-        return ResponseEntity.ok(statService.getStatAll());
-    }*/
-
     @RequestMapping(value = "/api/settings", method = RequestMethod.PUT)
-    public int saveSettings(){
-        return 239;
+    @PreAuthorize("hasAuthority('user:write')")
+    public ResponseEntity<ResponseResult> saveSettings(@RequestBody SettingsResponse settingsResponse){
+
+        return ResponseEntity.ok(settingsServise.setGlobalSettingsAll(settingsResponse));
     }
 
 }

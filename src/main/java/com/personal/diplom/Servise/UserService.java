@@ -7,11 +7,15 @@ import com.personal.diplom.model.CaptchaCode;
 import com.personal.diplom.model.User;
 import com.personal.diplom.repository.CaptchaRepository;
 import com.personal.diplom.repository.UserRepository;
+import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.security.Principal;
@@ -117,30 +121,43 @@ public class UserService {
            userRegisterResponse.setResult(true);
         }
         else {
-            System.out.println("addUser false");
+
             userRegisterResponse.setResult(false);
             userRegisterResponse.setErrors(userCheckResponse);
         }
            return userRegisterResponse;
     }
 
-    public ResponseResult editProfile(ProfilRequest profilRequest, Principal principal) throws IOException {
+    public ResponseResult editProfile(ProfilRequest profilRequest,
+                                      HttpServletRequest request,
+                                      Principal principal) throws IOException {
         ResponseResult responseResult = new ResponseResult();
         ErrorResponse errorResponse = new ErrorResponse();
         User user = userRepository.findByEmail(principal.getName()).get();
         user.setEmail(profilRequest.getEmail());
         user.setName(profilRequest.getName());
 
+
         if((!profilRequest.getPhoto().isEmpty())&(profilRequest.getRemovePhoto() == 0)){
-            System.out.println("ФОТО НЕ ПУСТОЕ!!!!");
+            String uuidFile = UUID.randomUUID().toString();
+           // String resultFileName = "upload/" +uuidFile+"."+profilRequest.getPhoto().getOriginalFilename();
+            String resultFileName = uuidFile+"."+profilRequest.getPhoto().getOriginalFilename();
+            uploadPath = request.getServletContext().getRealPath(resultFileName);
+            System.out.println("resultFileName "+resultFileName);
+            System.out.println("uploadPath "+uploadPath);
             File uploadDir = new File(uploadPath);
-            if (!uploadDir.exists()){
+             if (!uploadDir.exists()){
                 uploadDir.mkdir();
             }
-            String uuidFile = UUID.randomUUID().toString();
-            String resultFileName = uuidFile+"."+profilRequest.getPhoto().getOriginalFilename();
-            profilRequest.getPhoto().transferTo(new File(uploadPath + "/"+resultFileName));
-            user.setPhoto(uploadPath + "/"+resultFileName);
+            System.out.println("uploadDir:"+uploadDir.getAbsolutePath());
+            profilRequest.getPhoto().transferTo(uploadDir);
+            BufferedImage originalImage = ImageIO.read(uploadDir);
+            System.out.println("Height "+originalImage.getHeight()+ " width "+ originalImage.getWidth());
+            if ((originalImage.getWidth() > 36 )||(originalImage.getHeight() > 36)){
+                BufferedImage outputImage = Scalr.resize(originalImage, 36, 36);
+                ImageIO.write(outputImage,"jpg",uploadDir);
+            }
+            user.setPhoto(resultFileName);
         }
         if (profilRequest.getPassword() != null){
             if (profilRequest.getPassword().length() < 6){

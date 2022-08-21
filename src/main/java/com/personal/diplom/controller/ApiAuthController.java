@@ -1,20 +1,24 @@
 package com.personal.diplom.controller;
 
 import com.personal.diplom.Servise.CaptchaService;
+import com.personal.diplom.Servise.DefaultEmailService;
+import com.personal.diplom.Servise.EmailService;
 import com.personal.diplom.Servise.UserService;
 import com.personal.diplom.api.request.PasswordRequest;
+import com.personal.diplom.api.request.RestoreRequest;
 import com.personal.diplom.api.request.UserRegisterRequest;
 import com.personal.diplom.api.response.*;
 import com.personal.diplom.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -29,15 +33,20 @@ public class ApiAuthController {
 
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
+    private final DefaultEmailService defaultEmailService;
+    @Autowired
+    EmailService emailService;
+
     @Value("${upload.path}")
     private String uploadPath;
 
     @Autowired
-    public ApiAuthController(CaptchaService captchaService, UserService userService, AuthenticationManager authenticationManager, UserRepository userRepository) {
+    public ApiAuthController(CaptchaService captchaService, UserService userService, AuthenticationManager authenticationManager, UserRepository userRepository, DefaultEmailService defaultEmailService) {
         this.captchaService = captchaService;
         this.userService = userService;
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
+        this.defaultEmailService = defaultEmailService;
     }
 
     @RequestMapping(value = "/api/auth/login" , method = RequestMethod.POST)
@@ -82,8 +91,8 @@ public class ApiAuthController {
     }
 
     @RequestMapping(value = "/api/auth/restore" , method = RequestMethod.POST)
-    public int restorePassword(){
-        return 6;
+    public ResponseEntity<ResponseResult> restorePassword(@RequestBody RestoreRequest email){
+        return ResponseEntity.ok(defaultEmailService.checkUserAndMail(email.getEmail()));
     }
 
     @RequestMapping(value = "/api/auth/password" , method = RequestMethod.POST)
@@ -112,10 +121,25 @@ public class ApiAuthController {
         userLoginResponse.setName(currentUser.getName());
         userLoginResponse.setModeration(currentUser.getIsModerator() == 1 );
         userLoginResponse.setId(currentUser.getId());
-        userLoginResponse.setPhoto(uploadPath + "/"+currentUser.getPhoto());
+        userLoginResponse.setPhoto(currentUser.getPhoto());
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setResult(true);
         loginResponse.setUserLoginResponse(userLoginResponse);
         return loginResponse;
+    }
+
+
+
+    @GetMapping(value = "/simple-email/{user-email}")
+    public @ResponseBody ResponseEntity sendSimpleEmail(@PathVariable("user-email") String email) {
+
+        try {
+            emailService.sendSimpleEmail(email, "Welcome", "This is a welcome email for your!!");
+        } catch (MailException mailException) {
+           // LOG.error("Error while sending out email..{}", mailException.getStackTrace());
+            return new ResponseEntity<>("Unable to send email", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<>("Please check your inbox", HttpStatus.OK);
     }
 }

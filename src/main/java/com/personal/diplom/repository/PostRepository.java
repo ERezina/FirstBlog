@@ -1,5 +1,6 @@
 package com.personal.diplom.repository;
 
+import com.personal.diplom.model.ModerationStatusType;
 import com.personal.diplom.model.Post;
 import com.personal.diplom.model.User;
 import org.springframework.data.domain.Page;
@@ -25,6 +26,17 @@ public interface PostRepository extends PagingAndSortingRepository<Post,Integer>
                         "AND moderation_status = 'ACCEPTED' AND date <= sysdate()  ",
             nativeQuery = true)
     Page<Post> findAllPostPagination(Pageable pageable);
+
+    @Query(value = "SELECT * FROM posts WHERE is_active = 1 " +
+            " AND moderation_status = :status "
+            + " AND ( moderator_id is null or moderator_id = :mod_id )"+
+            " AND date <= sysdate() ",
+            countQuery = "SELECT count(*) FROM posts WHERE is_active = 1 "+
+                    " AND moderation_status = :status " +
+                    " AND ( moderator_id is null OR moderator_id = :mod_id ) " +
+                    " AND date <= sysdate()  ",
+            nativeQuery = true)
+    Page<Post> findAllPostPaginationModerator(Pageable pageable, @Param("status")String status, @Param("mod_id") Integer mod_id);
 
     @Query(value = "SELECT * FROM posts WHERE (text like concat('%',:query,'%') or concat('%',:query,'%') is null) and is_active = 1 AND moderation_status = 'ACCEPTED' AND date <= sysdate() ",
             countQuery = "SELECT count(*) FROM posts"+
@@ -86,9 +98,9 @@ public interface PostRepository extends PagingAndSortingRepository<Post,Integer>
             "JOIN p.postTags t  "+
             "WHERE p.isActive = 1  " +
             "AND p.moderationStatus = 'ACCEPTED' AND p.date <= CURRENT_DATE() " +
-            "and t.id = 1 "
+            "and t.id = :tagId "
              )
-    Page<Post> findPostByTag(Pageable pageable, @Param("tag") String tag);
+    Page<Post> findPostByTag(Pageable pageable, @Param("tagId") int tagId);
 
     @Query(value = "SELECT * FROM Posts WHERE id = :query and is_active = 1 " +
             "AND moderation_status = 'ACCEPTED' " +
@@ -110,4 +122,5 @@ public interface PostRepository extends PagingAndSortingRepository<Post,Integer>
             "WHERE :user is null or p.user = :user  "
     )
     Optional<Integer> viewCount(@Param("user")User user);
-}
+
+ }
