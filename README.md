@@ -11,8 +11,11 @@
 
 
 Для локального запуска необходимо
-установить MySQL
-
+установить MySQL со схемой 
+запуск проекта 
+```
+java -jar firstblog.jar
+```
 
 ссылка на рабочий проект
 https://rezina-java-skillbox.herokuapp.com/
