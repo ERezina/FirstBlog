@@ -11,7 +11,9 @@
 
 
 Для локального запуска необходимо
-установить MySQL со схемой 
+- JDK 11
+- MySQL со схемой diplomblog3 (root/testtest)
+
 запуск проекта 
 ```
 java -jar firstblog.jar
