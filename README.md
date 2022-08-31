@@ -2,12 +2,12 @@
 Блоговый движок позволяет вести свой собственный блог не завися от причуд Инстаграмма , Фейсбука  тд
 
 Используемые технологии
-Java 11
-MySQL
-Java springframework 
-MVC
-hibernate
-liquibase
+- Java 11
+- MySQL
+- Java springframework 
+- MVC
+- hibernate
+- liquibase
 
 
 Для локального запуска необходимо
